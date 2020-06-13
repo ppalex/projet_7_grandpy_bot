@@ -3,7 +3,7 @@ from flaskr.models import GoogleApi
 class TestGoogleApi: 
     
         
-    def test_get_localization(self, monkeypatch):
+    def test_send_request(self, monkeypatch):
         place = "Paris"
         results = {
                     "results" : [
@@ -28,11 +28,13 @@ class TestGoogleApi:
         
         
         monkeypatch.setattr('flaskr.models.requests.get', MockRequestGet)
-        GoogleApi().get_localization("Paris")
+        GoogleApi().send_request("Paris")
        
-        assert GoogleApi().get_localization("Paris") == results
+        assert GoogleApi().send_request("Paris") == results
     
     
+    def test_get_formatted_address:
+        pass
     
     
 class TestWikiApi:
