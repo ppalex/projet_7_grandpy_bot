@@ -9,7 +9,7 @@ class GoogleApi:
     def __init__(self):
         self.url = config.value['GOOGLE']['URL']
         self.api_key = config.value['GOOGLE']['API_KEY']
-        self.data = []
+        self._data = []
     
     
     def send_request(self, place):
@@ -28,13 +28,21 @@ class GoogleApi:
             
         
         if response.status_code == 200:
-            self.data = response.json()
+            self._data = response.json()
         
-        return self.data
+        return self._data
     
     
-    def get_formatted_adress:
-        pass
+    def get_formatted_address(self):
+        formatted_address = []
+                
+        if self.get_data():
+            formatted_address = self.get_data()['results'][0]['formatted_address']
+        
+        return formatted_address
+    
+    def get_data(self):
+        return self._data
         
         
     
