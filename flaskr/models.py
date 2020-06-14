@@ -13,11 +13,9 @@ class GoogleApi:
     
     
     def send_request(self, place):
-        
-        url = self.url + place + f"&key={self.api_key}"
-        
+        payload = {'address': place, 'key':self.api_key}
         try:
-            response = requests.get(url)
+            response = requests.get(self.url, params=payload)
         except requests.exceptions.Timeout:
             logging.error("Timeout error")
         except requests.exceptions.TooManyRedirects:
@@ -29,7 +27,7 @@ class GoogleApi:
         
         if response.status_code == 200:
             self._data = response.json()
-        
+       
         return self._data
     
     

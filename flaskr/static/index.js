@@ -2,7 +2,7 @@ import {displayMap} from './google_map.js'
 
 
 let form = document.querySelector("#form-question");
-displayMap(-34.397, 150.644);
+
 
 function send_data_to_backend(url, data) {
 
@@ -10,7 +10,7 @@ function send_data_to_backend(url, data) {
         method: "POST",
         body: data
     })
-    .then()
+    .then(response => response.json())
     .catch(error => console.log(error));
 }
 
@@ -24,7 +24,7 @@ function add_question_to_chat(question){
 
     newDiv.appendChild(newP);
     chatbox.appendChild(newDiv);
-    console.log(question);
+
     newP.textContent = question;
 
 }
@@ -39,8 +39,20 @@ form.addEventListener('submit', function (event) {
     event.preventDefault();
     let question = document.querySelector('#question').value;
     add_question_to_chat(question);
-    send_data_to_backend("/form", new FormData(form))
 
+    send_data_to_backend("/form", new FormData(form))
+    .then(response => {
+        console.log("test1");
+
+        let lat = response["results"][0]["geometry"]["location"]["lat"];
+        let lng = response["results"][0]["geometry"]["location"]["lng"];
+        console.log("test1");
+    
+        return displayMap(lat, lng);
+
+    });
+
+  
 });
 
 

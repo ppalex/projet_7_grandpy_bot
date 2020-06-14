@@ -14,9 +14,9 @@ def index():
 def form():
     data = request.form["user_text"]
     
-    # google_api = GoogleApi()    
-    # google_api_response = google_api.send_request(data)
-    google_api_response = "null"
+    google_api = GoogleApi()    
+    google_api_response = google_api.send_request(data)
+    
     return jsonify(google_api_response)
 
 
