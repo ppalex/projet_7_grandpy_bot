@@ -1,5 +1,5 @@
-let form = document.querySelector("#form-question");
 
+let form = document.querySelector("#form-question");
 
 function send_data_to_backend(url, data) {
 
@@ -40,3 +40,5 @@ form.addEventListener('submit', function (event) {
     send_data_to_backend("/form", new FormData(form))
 
 });
+
+
