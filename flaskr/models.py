@@ -72,7 +72,7 @@ class WikiApi:
                     "format": "json",
                     "list": "geosearch",
                     "gscoord": f"{latitude}|{longitude}",
-                    "gsradius":"1000",
+                    "gsradius": "1000",
                     "gslimit": "1"}
 
         try:
@@ -91,8 +91,28 @@ class WikiApi:
         else:
             return None
 
-    def send_pageids_request(self):
-        pass
+    def send_pageids_request(self, pageids):
+        payload = {
+                    "action": "query",
+                    "format": "json",
+                    "prop": "extracts",
+                    "pageids": f"{pageids}"}
+
+        try:
+            response = requests.get(self.url, params=payload)
+        except requests.exceptions.Timeout:
+            logging.error("Timeout error")
+        except requests.exceptions.TooManyRedirects:
+            logging.error("Bad url")
+        except requests.exceptions.RequestException as e:
+            logging.error("Bad request")
+            raise SystemExit(e)
+
+        if response.status_code == 200:
+            self._data = response.json()
+            return response.json()
+        else:
+            return None
 
 
 class Parser:

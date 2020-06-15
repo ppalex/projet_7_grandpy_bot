@@ -68,21 +68,22 @@ class TestGoogleApi:
 
 class TestWikiApi:
 
-    class MockRequestGet:
-        def __init__(self, url, params=None):
-            self.status_code = 200
-
-        def json(self):
-            return {'batchcomplete': '',
-                    'query': {'geosearch': [{'pageid': 51281575,
-                                             'ns': 0,
-                                             'title': 'Studio Berçot',
-                                             'lat': 48.8738,
-                                             'lon': 2.3515,
-                                             'dist': 138,
-                                             'primary': ''}]}}
-
     def test_send_geosearch_request(self, monkeypatch):
+
+        class MockRequestGet:
+            def __init__(self, url, params=None):
+                self.status_code = 200
+
+            def json(self):
+                return {'batchcomplete': '',
+                        'query': {'geosearch': [{'pageid': 51281575,
+                                                 'ns': 0,
+                                                 'title': 'Studio Berçot',
+                                                 'lat': 48.8738,
+                                                 'lon': 2.3515,
+                                                 'dist': 138,
+                                                 'primary': ''}]}}
+
         results = {'batchcomplete': '',
                    'query': {'geosearch': [{'pageid': 51281575,
                                             'ns': 0,
@@ -92,9 +93,43 @@ class TestWikiApi:
                                             'dist': 138,
                                             'primary': ''}]}}
 
-        monkeypatch.setattr("flaskr.models.requests.get", self.MockRequestGet)
+        monkeypatch.setattr("flaskr.models.requests.get", MockRequestGet)
         wikimedia_api = WikiApi()
         response = wikimedia_api.send_geosearch_request(48.8738, 2.3515)
+
+        assert response == results
+
+    def test_send_pageids_request(self, monkeypatch):
+        class MockRequestGet:
+            def __init__(self, url, params=None):
+                self.status_code = 200
+
+            def json(self):
+                return {"batchcomplete": "",
+                        "warnings": {
+                            "extracts": {}},
+                        "query": {
+                            "pages": {
+                                "18618509": {
+                                    "pageid": 18618509,
+                                    "ns": 0,
+                                    "title": "Wikimedia Foundation",
+                                    "extract": ""}}}}
+
+        results = {"batchcomplete": "",
+                   "warnings": {
+                       "extracts": {}},
+                   "query": {
+                       "pages": {
+                           "18618509": {
+                               "pageid": 18618509,
+                               "ns": 0,
+                               "title": "Wikimedia Foundation",
+                               "extract": ""}}}}
+
+        monkeypatch.setattr("flaskr.models.requests.get", MockRequestGet)
+        wikimedia_api = WikiApi()
+        response = wikimedia_api.send_pageids_request(18618509)
 
         assert response == results
 
