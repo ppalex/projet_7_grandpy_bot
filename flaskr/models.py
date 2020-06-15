@@ -84,9 +84,14 @@ class Response:
         self.latitude = latitude
         self.longitude = longitude
         self.message_for_address = message_for_address
-        self.message_for_story = message_for_story
-        
+        self.message_for_story = message_for_story        
         
     
     def formatted_response(self):
-        pass
+        return {
+            "formatted_address": self.formatted_address,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "message_for_address": self.message_for_address,
+            "message_for_story": self.message_for_story
+        }

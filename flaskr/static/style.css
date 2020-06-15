@@ -28,6 +28,16 @@ html {
     margin: 10px 0;
   }
 
+.chatbox_answer {
+    width: 30%;
+    border-color: #ccc;
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+
   .map_container {
     width: 500px;
     height: 500px;

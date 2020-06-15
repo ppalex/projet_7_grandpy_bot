@@ -5,11 +5,10 @@ function displayMap(latitude, longitude){
         zoom: 15
       });
 
-      let marker = new google.maps.Marker({
-        position: {lat: latitude, lng: longitude },
-        map: map
-      });
-
+    let marker = new google.maps.Marker({
+      position: {lat: latitude, lng: longitude },
+      map: map
+    });
 }
 
 export {displayMap};

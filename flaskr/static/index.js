@@ -3,7 +3,6 @@ import {displayMap} from './google_map.js'
 
 let form = document.querySelector("#form-question");
 
-
 function send_data_to_backend(url, data) {
 
     return fetch(url, {
@@ -13,7 +12,6 @@ function send_data_to_backend(url, data) {
     .then(response => response.json())
     .catch(error => console.log(error));
 }
-
 
 function add_question_to_chat(question){
     let newDiv = document.createElement("div");
@@ -29,7 +27,18 @@ function add_question_to_chat(question){
 
 }
 
-function add_answer_to_chat(){
+function add_answer_to_chat(answer){
+
+    let newDiv = document.createElement("div");
+    let newP = document.createElement("p")
+    let chatbox = document.querySelector("#chatbox");
+
+    newDiv.setAttribute("class", "chatbox_answer");
+
+    newDiv.appendChild(newP);
+    chatbox.appendChild(newDiv);
+
+    newP.textContent = answer;
     
 }
 
@@ -43,15 +52,14 @@ form.addEventListener('submit', function (event) {
     send_data_to_backend("/form", new FormData(form))
     .then(response => {
 
-        let lat = response["results"][0]["geometry"]["location"]["lat"];
-        let lng = response["results"][0]["geometry"]["location"]["lng"];
-        console.log("test1");
-    
-        return displayMap(lat, lng);
+        let lat = response["latitude"];
+        let lng = response["longitude"];
+        let address = response["formatted_address"];
+        console.log(response);
+        add_answer_to_chat(address);
+        displayMap(lat, lng);
 
-    });
-
-  
+    });  
 });
 
 

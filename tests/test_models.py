@@ -1,4 +1,4 @@
-from flaskr.models import GoogleApi
+from flaskr.models import GoogleApi, Response
 
 class TestGoogleApi:
     
@@ -76,3 +76,20 @@ class TestWikiApi:
     
 class TestParser:
     pass
+
+
+class TestResponse:
+    
+    def test_formatted_response(self):
+        
+        result = {
+            "formatted_address": "7 Cité Paradis, 75010 Paris, France",
+            "latitude": 2.350487,
+            "longitude": 48.874847,
+            "message_for_address": "",
+            "message_for_story": ""
+        }
+        
+        response = Response("7 Cité Paradis, 75010 Paris, France", 2.350487,  48.874847, "", "")
+        
+        assert response.formatted_response() == result
