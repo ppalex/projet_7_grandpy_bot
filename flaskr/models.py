@@ -113,6 +113,19 @@ class WikiApi:
             return response.json()
         else:
             return None
+    
+    def get_data(self):
+        return self._data        
+        
+    def get_page_id(self):
+        page_id = None
+        wiki_data = self.get_data()
+        try:
+            page_id = wiki_data['query']['geosearch'][0]['pageid']
+        except KeyError:
+            logging.error('Key does not exist')
+            
+        return page_id
 
 
 class Parser:

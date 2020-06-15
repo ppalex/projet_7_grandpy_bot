@@ -67,10 +67,8 @@ class TestGoogleApi:
 
 
 class TestWikiApi:
-
-    def test_send_geosearch_request(self, monkeypatch):
-
-        class MockRequestGet:
+    
+    class MockRequestGetGeosearch:
             def __init__(self, url, params=None):
                 self.status_code = 200
 
@@ -83,24 +81,8 @@ class TestWikiApi:
                                                  'lon': 2.3515,
                                                  'dist': 138,
                                                  'primary': ''}]}}
-
-        results = {'batchcomplete': '',
-                   'query': {'geosearch': [{'pageid': 51281575,
-                                            'ns': 0,
-                                            'title': 'Studio Berçot',
-                                            'lat': 48.8738,
-                                            'lon': 2.3515,
-                                            'dist': 138,
-                                            'primary': ''}]}}
-
-        monkeypatch.setattr("flaskr.models.requests.get", MockRequestGet)
-        wikimedia_api = WikiApi()
-        response = wikimedia_api.send_geosearch_request(48.8738, 2.3515)
-
-        assert response == results
-
-    def test_send_pageids_request(self, monkeypatch):
-        class MockRequestGet:
+    
+    class MockRequestGetPageId:
             def __init__(self, url, params=None):
                 self.status_code = 200
 
@@ -116,6 +98,25 @@ class TestWikiApi:
                                     "title": "Wikimedia Foundation",
                                     "extract": ""}}}}
 
+    def test_send_geosearch_request(self, monkeypatch):        
+
+        results = {'batchcomplete': '',
+                   'query': {'geosearch': [{'pageid': 51281575,
+                                            'ns': 0,
+                                            'title': 'Studio Berçot',
+                                            'lat': 48.8738,
+                                            'lon': 2.3515,
+                                            'dist': 138,
+                                            'primary': ''}]}}
+
+        monkeypatch.setattr("flaskr.models.requests.get", self.MockRequestGetGeosearch)
+        wikimedia_api = WikiApi()
+        response = wikimedia_api.send_geosearch_request(48.8738, 2.3515)
+
+        assert response == results
+
+    def test_send_pageids_request(self, monkeypatch):       
+
         results = {"batchcomplete": "",
                    "warnings": {
                        "extracts": {}},
@@ -127,11 +128,24 @@ class TestWikiApi:
                                "title": "Wikimedia Foundation",
                                "extract": ""}}}}
 
-        monkeypatch.setattr("flaskr.models.requests.get", MockRequestGet)
+        monkeypatch.setattr("flaskr.models.requests.get", self.MockRequestGetPageId)
         wikimedia_api = WikiApi()
         response = wikimedia_api.send_pageids_request(18618509)
 
         assert response == results
+        
+        
+        
+    def test_get_page_id(self, monkeypatch):
+        result = 51281575
+        
+        monkeypatch.setattr('flaskr.models.requests.get', self.MockRequestGetGeosearch)
+        wikimedia_api = WikiApi()
+        response = wikimedia_api.send_geosearch_request(48.8738, 2.3515)
+        
+        page_id = wikimedia_api.get_page_id()
+        
+        assert page_id == result
 
 
 class TestParser:
