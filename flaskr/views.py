@@ -1,7 +1,7 @@
 from flask import render_template, jsonify, request
 from flask import Blueprint
 
-from flaskr.models import GoogleApi
+from flaskr.utils import treat_data
 
 view = Blueprint('view', __name__)
 
@@ -14,9 +14,8 @@ def index():
 def form():
     data = request.form["user_text"]
     
-    google_api = GoogleApi()    
-    google_api_response = google_api.send_request(data)
+    response = treat_data(data)
     
-    return jsonify(google_api_response)
+    return jsonify(response)
 
 

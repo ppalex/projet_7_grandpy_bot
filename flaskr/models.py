@@ -30,6 +30,8 @@ class GoogleApi:
        
         return self._data
     
+    def get_data(self):
+        return self._data
     
     def get_formatted_address(self):
         formatted_address = []
@@ -39,8 +41,21 @@ class GoogleApi:
         
         return formatted_address
     
-    def get_data(self):
-        return self._data
+    def get_latitude(self):
+        latitude = None
+        
+        if self.get_data():
+            latitude = self.get_data()['results'][0]['geometry']['location']['lat']
+        
+        return latitude
+        
+    def get_longitude(self):
+        longitude = None
+        
+        if self.get_data():
+            longitude = self.get_data()['results'][0]['geometry']['location']['lng']
+        
+        return longitude
         
         
     
@@ -48,7 +63,30 @@ class WikiApi:
     def __init__(self):
         pass
     
+    def send_request(self):
+        pass
+    
     
 class Parser:
     def __init__(self):
+        pass
+    
+    
+class Message:
+    def __init__(self):
+        pass
+    
+    
+    
+class Response:
+    def __init__(self, formatted_address, latitude, longitude, message_for_address, message_for_story):
+        self.formatted_address = formatted_address
+        self.latitude = latitude
+        self.longitude = longitude
+        self.message_for_address = message_for_address
+        self.message_for_story = message_for_story
+        
+        
+    
+    def formatted_response(self):
         pass

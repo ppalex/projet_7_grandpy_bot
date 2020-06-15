@@ -11,13 +11,12 @@ class TestGoogleApi:
                 "results" : [
                     {
                         "address_components" : [
-                                                {
-                                                "long_name" : "Paris"
-                                                }],
-                        "formatted_address" : "7 Cité Paradis, 75010 Paris, France"
-                        }                        
-                    ]                                    
-                }
+                                                {"long_name" : "Paris"}],
+                        "formatted_address" : "7 Cité Paradis, 75010 Paris, France",
+                        "geometry": {"location": {"lat": 48.874847, "lng": 2.350487}}
+                        }                       
+                    ]                                   
+                }     
     
         
     def test_send_request(self, monkeypatch):
@@ -25,12 +24,11 @@ class TestGoogleApi:
                 "results" : [
                     {
                         "address_components" : [
-                                                {
-                                                "long_name" : "Paris"
-                                                }],
-                        "formatted_address" : "7 Cité Paradis, 75010 Paris, France"
-                        }                       
-                    ]                                   
+                                                {"long_name" : "Paris"}],
+                        "formatted_address" : "7 Cité Paradis, 75010 Paris, France",
+                        "geometry": {"location": {"lat": 48.874847, "lng": 2.350487}}
+                        }                 
+                    ]                                  
                 }        
         
         monkeypatch.setattr('flaskr.models.requests.get', self.MockRequestGet)
@@ -47,6 +45,29 @@ class TestGoogleApi:
         formatted_address = google_api.get_formatted_address()
         
         assert formatted_address == result
+        
+        
+    def test_get_latitude(self, monkeypatch):
+        result = 2.350487
+        
+        monkeypatch.setattr('flaskr.models.requests.get', self.MockRequestGet)
+        google_api = GoogleApi()
+        response = google_api.send_request("OpenClassrooms")
+        
+        longitude = google_api.get_longitude()
+        
+        assert longitude == result
+    
+    def test_get_longitude(self, monkeypatch):
+        result = 48.874847
+        
+        monkeypatch.setattr('flaskr.models.requests.get', self.MockRequestGet)
+        google_api = GoogleApi()
+        response = google_api.send_request("OpenClassrooms")
+        
+        latitude = google_api.get_latitude()
+        
+        assert latitude == result
     
     
 class TestWikiApi:
