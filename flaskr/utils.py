@@ -2,25 +2,23 @@ from flaskr.models import GoogleApi, WikiApi, Response
 
 
 def treat_data_from_user(data):
+    
     google_api_data = get_data_from_google_api(data)
     wiki_api_data = get_data_from_wiki_api(google_api_data)
+    
+    response = Response(google_api_data.get_formatted_address(),
+                        google_api_data.get_latitude(),
+                        google_api_data.get_longitude(),
+                        "",
+                        "")
 
-    import pdb
-    pdb.set_trace()
-
-    return None
+    return response.formatted_response()
 
 
 def get_data_from_google_api(data):
 
     google_api = GoogleApi()
-    google_api.send_request(data)
-
-    # response = Response(google_api.get_formatted_address(),
-    #                     google_api.get_latitude(),
-    #                     google_api.get_longitude(),
-    #                     "",
-    #                     "")
+    google_api.send_request(data)    
 
     return google_api
 

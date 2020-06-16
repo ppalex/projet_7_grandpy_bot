@@ -1,2 +1,2 @@
 web: gunicorn gettingstarted.wsgi --log-file -
-init: FLASK_APP=run.py
+init: FLASK_APP=flaksr\run.py
