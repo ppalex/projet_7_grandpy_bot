@@ -68,9 +68,9 @@ class WikiApi:
 
     def send_geosearch_request(self, latitude, longitude):
         payload = {
-                    "action": "query",
-                    "format": "json",
-                    "list": "geosearch",
+            "action": "query",
+            "format": "json",
+            "list": "geosearch",
                     "gscoord": f"{latitude}|{longitude}",
                     "gsradius": "1000",
                     "gslimit": "1"}
@@ -93,9 +93,9 @@ class WikiApi:
 
     def send_pageids_request(self, pageids):
         payload = {
-                    "action": "query",
-                    "format": "json",
-                    "prop": "extracts",
+            "action": "query",
+            "format": "json",
+            "prop": "extracts",
                     "pageids": f"{pageids}"}
 
         try:
@@ -113,10 +113,10 @@ class WikiApi:
             return response.json()
         else:
             return None
-    
+
     def get_data(self):
-        return self._data        
-        
+        return self._data
+
     def get_page_id(self):
         page_id = None
         wiki_data = self.get_data()
@@ -124,8 +124,18 @@ class WikiApi:
             page_id = wiki_data['query']['geosearch'][0]['pageid']
         except KeyError:
             logging.error('Key does not exist')
-            
+
         return page_id
+
+    def get_extract(self, page_id):
+        extract = None
+        wiki_data = self.get_data()
+        try:
+            extract = wiki_data['query']['pages'][f"{page_id}"]['extract']
+        except KeyError:
+            logging.error('Key does not exist')
+        
+        return extract
 
 
 class Parser:

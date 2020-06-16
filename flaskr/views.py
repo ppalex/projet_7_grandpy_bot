@@ -1,7 +1,7 @@
 from flask import render_template, jsonify, request
 from flask import Blueprint
 
-from flaskr.utils import treat_data_from_user, get_data_from_google_api, get_data_from_wiki_api
+from flaskr.utils import treat_data_from_user
 
 view = Blueprint('view', __name__)
 
@@ -14,6 +14,6 @@ def index():
 @view.route('/form', methods=["POST"])
 def form():
     data = request.form["user_text"]
-    response = treat_data_from_user(data)    
+    response = treat_data_from_user(data)
 
     return jsonify(response)
