@@ -1,5 +1,5 @@
 from flask import Flask
-from .views import view
+from flaskr.views import view
 
 import configuration.config as conf
 
@@ -7,9 +7,6 @@ conf.load('./configuration/config.yml')
 
 app = Flask(__name__)
 app.register_blueprint(view)
-
-
-
 
 
 if __name__ == '__main__':
