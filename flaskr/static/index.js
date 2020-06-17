@@ -54,9 +54,11 @@ form.addEventListener('submit', function (event) {
 
         let lat = response["latitude"];
         let lng = response["longitude"];
-        let address = response["formatted_address"];
+        let message_for_address = response["message_for_address"];
+        let message_for_story = response["message_for_story"]
         console.log(response);
-        add_answer_to_chat(address);
+        add_answer_to_chat(message_for_address);
+        add_answer_to_chat(message_for_story);
         displayMap(lat, lng);
 
     });  

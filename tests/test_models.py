@@ -1,4 +1,4 @@
-from flaskr.models import GoogleApi, WikiApi, Response
+from flaskr.models import GoogleApi, WikiApi, Response, Parser
 
 
 class TestGoogleApi:
@@ -164,7 +164,25 @@ class TestWikiApi:
 
 
 class TestParser:
-    pass
+    def test_set_lowercase(self):
+        result = "hello world"
+        message = "HELLO WORLD"
+        parser = Parser(message)
+        
+        assert parser.set_lowercase() == result
+        
+        
+        
+    
+    def test_remove_stop_words(self):
+        pass
+    
+    def test_remove_accents(self):
+        result = "eeaaaun"
+        message = "éèàâäùñ"
+        parser = Parser(message)
+        
+        assert parser.remove_accents() == result
 
 
 class TestResponse:
@@ -172,15 +190,15 @@ class TestResponse:
     def test_formatted_response(self):
 
         result = {
-            "formatted_address": "7 Cité Paradis, 75010 Paris, France",
             "latitude": 2.350487,
             "longitude": 48.874847,
-            "message_for_address": "",
-            "message_for_story": ""
+            "message_for_address": "7 Cité Paradis, 75010 Paris, France",
+            "message_for_story": "story text"
         }
 
-        response = Response("7 Cité Paradis, 75010 Paris, France",
-                            2.350487,
-                            48.874847, "", "")
+        response = Response(2.350487,
+                            48.874847, 
+                            "7 Cité Paradis, 75010 Paris, France",
+                            "story text")
 
         assert response.formatted_response() == result

@@ -4,13 +4,12 @@ from flaskr.models import GoogleApi, WikiApi, Response
 def treat_data_from_user(data):
     
     google_api_data = get_data_from_google_api(data)
-    wiki_api_data = get_data_from_wiki_api(google_api_data)
+    wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
     
-    response = Response(google_api_data.get_formatted_address(),
-                        google_api_data.get_latitude(),
+    response = Response(google_api_data.get_latitude(),
                         google_api_data.get_longitude(),
-                        "",
-                        "")
+                        google_api_data.get_formatted_address(),
+                        wiki_api_data.get_extract(page_id))
 
     return response.formatted_response()
 
@@ -36,4 +35,4 @@ def get_data_from_wiki_api(data):
     pageids_data = WikiApi()
     pageids_data.send_pageids_request(page_id)
 
-    return pageids_data
+    return pageids_data, page_id

@@ -1,5 +1,9 @@
 import logging
 import requests
+import re
+
+from unidecode import unidecode
+
 
 import configuration.config as config
 
@@ -96,7 +100,8 @@ class WikiApi:
             "action": "query",
             "format": "json",
             "prop": "extracts",
-                    "pageids": f"{pageids}"}
+            "pageids": f"{pageids}",
+            "explaintext": "True"}
 
         try:
             response = requests.get(self.url, params=payload)
@@ -139,8 +144,22 @@ class WikiApi:
 
 
 class Parser:
-    def __init__(self):
+    def __init__(self, message):
+        self.message = message
+        
+    def set_lowercase(self):
+        return self.message.lower()
+    
+    def remove_accents(self):        
+        return unidecode(self.message)
+    
+    def extract_questions(self):
+        regex = "(^|(?<=[.?!,]))\s*[A-Za-z,;'\"\s\-]+\?"
+    
+    def remove_stop_words(self):
         pass
+    
+    
 
 
 class Message:
@@ -149,17 +168,15 @@ class Message:
 
 
 class Response:
-    def __init__(self, formatted_address, latitude, longitude,
-                 message_for_address, message_for_story):
-        self.formatted_address = formatted_address
+    def __init__(self,latitude, longitude,
+                 message_for_address, message_for_story):        
         self.latitude = latitude
         self.longitude = longitude
         self.message_for_address = message_for_address
         self.message_for_story = message_for_story
 
     def formatted_response(self):
-        return {
-            "formatted_address": self.formatted_address,
+        return {            
             "latitude": self.latitude,
             "longitude": self.longitude,
             "message_for_address": self.message_for_address,
