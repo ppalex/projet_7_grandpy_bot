@@ -1,9 +1,10 @@
-from flaskr.models import GoogleApi, WikiApi, Response
+from flaskr.models import GoogleApi, WikiApi, Response, Parser
 
 
 def treat_data_from_user(data):
-    
-    google_api_data = get_data_from_google_api(data)
+
+    message = parse_data_from_user(data)
+    google_api_data = get_data_from_google_api(message)
     wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
     
     response = Response(google_api_data.get_latitude(),
@@ -12,6 +13,15 @@ def treat_data_from_user(data):
                         wiki_api_data.get_extract(page_id))
 
     return response.formatted_response()
+
+def parse_data_from_user(data):
+    parser = Parser(data)
+    parser.set_lowercase()
+    parser.remove_accents()
+    parser.extract_questions()
+    parser.remove_stop_words()
+    
+    return parser.message
 
 
 def get_data_from_google_api(data):

@@ -1,6 +1,8 @@
 import logging
 import requests
 import re
+import json
+import os
 
 from unidecode import unidecode
 
@@ -148,10 +150,12 @@ class Parser:
         self.message = message
         
     def set_lowercase(self):
-        return self.message.lower()
+        self.message = self.message.lower()
+        return self.message
     
-    def remove_accents(self):        
-        return unidecode(self.message)
+    def remove_accents(self):
+        self.message = unidecode(self.message)    
+        return self.message
     
     def extract_questions(self):
         regex = r"(?<=[.?!,])\s*[A-Za-z,;'\"\s\-]+\?"
@@ -161,12 +165,20 @@ class Parser:
             result = [element.strip() for element in m]
         except AttributeError:
             logging.error("AttributeError")
-        return result
+        self.message = result[0]
+        return self.message
     
     def remove_stop_words(self):
-        pass
-    
-    
+        
+        message = self.message.split()
+
+        with open(os.path.join('flaskr', 'static', 'fr.json'), encoding='utf-8') as json_file:
+            stop_words = json.load(json_file)
+            
+        result = [word for word in message if word not in stop_words]        
+        self.message = " ".join(result)
+        
+        return self.message
 
 
 class Message:

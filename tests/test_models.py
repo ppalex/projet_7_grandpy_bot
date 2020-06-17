@@ -1,5 +1,8 @@
 from flaskr.models import GoogleApi, WikiApi, Response, Parser
 
+import json
+import os
+
 
 class TestGoogleApi:
 
@@ -190,7 +193,19 @@ class TestParser:
         
         
     def test_remove_stop_words(self):
-        pass
+        result = ""
+        
+        with open(os.path.join('flaskr', 'static', 'fr.json'), encoding='utf-8') as json_file:
+            message = json.load(json_file)
+            
+        message = " ".join(message)
+        
+        parser = Parser(message)
+        
+        
+        assert parser.remove_stop_words() == result
+        
+        
 
 
 class TestResponse:
