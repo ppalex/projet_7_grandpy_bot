@@ -169,20 +169,28 @@ class TestParser:
         message = "HELLO WORLD"
         parser = Parser(message)
         
-        assert parser.set_lowercase() == result
-        
-        
-        
-    
-    def test_remove_stop_words(self):
-        pass
-    
+        assert parser.set_lowercase() == result       
+
     def test_remove_accents(self):
         result = "eeaaaun"
         message = "éèàâäùñ"
         parser = Parser(message)
         
         assert parser.remove_accents() == result
+        
+    def test_extract_questions(self):
+        result = ["Comment vas-tu?", "Est-ce que tu pourrais m'indiquer l'adresse de la tour eiffel?"]
+        message = """"Bonsoir Grandpy, Comment vas-tu?
+                        J'espère que tu as passé une belle semaine.
+                        Est-ce que tu pourrais m'indiquer l'adresse de la tour eiffel? """ 
+                        
+        parser = Parser(message)
+        
+        assert parser.extract_questions() == result       
+        
+        
+    def test_remove_stop_words(self):
+        pass
 
 
 class TestResponse:

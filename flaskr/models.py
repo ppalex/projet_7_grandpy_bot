@@ -154,7 +154,14 @@ class Parser:
         return unidecode(self.message)
     
     def extract_questions(self):
-        regex = "(^|(?<=[.?!,]))\s*[A-Za-z,;'\"\s\-]+\?"
+        regex = r"(?<=[.?!,])\s*[A-Za-z,;'\"\s\-]+\?"
+        
+        try:
+            m = re.findall(regex, self.message)
+            result = [element.strip() for element in m]
+        except AttributeError:
+            logging.error("AttributeError")
+        return result
     
     def remove_stop_words(self):
         pass
