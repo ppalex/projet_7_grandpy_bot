@@ -3,6 +3,8 @@ from flaskr.models import GoogleApi, WikiApi, Response, Parser
 import json
 import os
 
+from nltk.stem import SnowballStemmer
+
 
 class TestGoogleApi:
 
@@ -182,10 +184,11 @@ class TestParser:
         assert parser.remove_accents() == result
         
     def test_extract_questions(self):
-        result = ["Comment vas-tu?", "Est-ce que tu pourrais m'indiquer l'adresse de la tour eiffel?"]
+        result = "Est-ce que tu pourrais m indiquer l adresse de la tour eiffel?"
+        
         message = """"Bonsoir Grandpy, Comment vas-tu?
-                        J'espère que tu as passé une belle semaine.
-                        Est-ce que tu pourrais m'indiquer l'adresse de la tour eiffel? """ 
+                        J espere que tu as passé une belle semaine.
+                        Est-ce que tu pourrais m indiquer l adresse de la tour eiffel?""" 
                         
         parser = Parser(message)
         
@@ -198,15 +201,26 @@ class TestParser:
         with open(os.path.join('flaskr', 'static', 'fr.json'), encoding='utf-8') as json_file:
             message = json.load(json_file)
             
-        message = " ".join(message)
-        
-        parser = Parser(message)
-        
+        message = " ".join(message)        
+        parser = Parser(message)        
         
         assert parser.remove_stop_words() == result
         
+    def test_remove_apostrof(self):
+        result = "lmnop"
+        message = "l'm'n'o'p'"
+        parser = Parser(message)
         
-
+        assert parser.test_remove_apostrof() == result
+        
+    def test_pick_up_question(self):
+        message = ["donne moi l'adresse de", "je me trouve et je veux acceder depuis ma position"]
+        result = "je me trouve et je veux acceder depuis ma position"
+        
+        parser = Parser("")
+        
+        assert parser._pick_up_question(message) == result      
+    
 
 class TestResponse:
 

@@ -3,6 +3,8 @@ import requests
 import re
 import json
 import os
+from nltk.stem import SnowballStemmer
+from nltk.tokenize import word_tokenize
 
 from unidecode import unidecode
 
@@ -165,7 +167,9 @@ class Parser:
             result = [element.strip() for element in m]
         except AttributeError:
             logging.error("AttributeError")
-        self.message = result[0]
+            
+        self.message = self._pick_up_question(result)
+        
         return self.message
     
     def remove_stop_words(self):
@@ -179,6 +183,36 @@ class Parser:
         self.message = " ".join(result)
         
         return self.message
+    
+    def test_remove_apostrof(self):
+        self.message = self.message.replace("'", "")
+        return self.message
+    
+    
+    def _pick_up_question(self, dic):
+        result = ""
+        
+        stemmer = SnowballStemmer("french")
+        with open(os.path.join('flaskr', 'static', 'detect_word.json'), encoding='utf-8') as json_file:
+            words = json.load(json_file)
+
+        stem_words = [stemmer.stem(w) for w in words]
+    
+        similarity = 0
+        for sentence in dic:
+            token_sentence = word_tokenize(sentence)
+            stem_sentence = [stemmer.stem(s) for s in token_sentence]
+            intersection = [value for value in stem_sentence if value in stem_words]
+           
+            if len(intersection) > similarity:
+                result = sentence
+        
+        return result
+            
+    
+    
+    def get_first_section(self):
+        pass
 
 
 class Message:

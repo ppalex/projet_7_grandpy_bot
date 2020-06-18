@@ -20,6 +20,7 @@ def parse_data_from_user(data):
     parser.remove_accents()
     parser.extract_questions()
     parser.remove_stop_words()
+    parser.test_remove_apostrof()
     
     return parser.message
 
