@@ -25,11 +25,11 @@ class GoogleApi:
         try:
             response = requests.get(self.url, params=payload)
         except requests.exceptions.Timeout:
-            logging.error("Timeout error")
+            logging.error("Timeout error", exc_info=True)
         except requests.exceptions.TooManyRedirects:
-            logging.error("Bad url")
+            logging.error("Bad url", exc_info=True)
         except requests.exceptions.RequestException as e:
-            logging.error("Bad request")
+            logging.error("Bad request",exc_info=True)
             raise SystemExit(e)
 
         if response.status_code == 200:
@@ -130,19 +130,20 @@ class WikiApi:
         page_id = None
         wiki_data = self.get_data()
         try:
+            
             page_id = wiki_data['query']['geosearch'][0]['pageid']
         except KeyError:
-            logging.error('Key does not exist')
+            logging.error('Key does not exist', exc_info=True)
 
         return page_id
 
     def get_extract(self, page_id):
         extract = None
         wiki_data = self.get_data()
-        try:
+        try:            
             extract = wiki_data['query']['pages'][f"{page_id}"]['extract']
         except KeyError:
-            logging.error('Key does not exist')
+            logging.error('Key does not exist', exc_info=True)
         
         return extract
 
@@ -160,14 +161,18 @@ class Parser:
         return self.message
     
     def extract_questions(self):
-        regex = r"(?<=[.?!,])\s*[A-Za-z,;'\"\s\-]+\?"
-        
+        regex = r"""(^|(?<=[.?!,]))\s*[A-Za-z,;'\"\s\-]+\?"""
+        result = []
         try:
-            m = re.findall(regex, self.message)
-            result = [element.strip() for element in m]
+            matches = re.finditer(regex, self.message)
+            
+            for matchNum, match in enumerate(matches):
+                result.append(match.group())            
+            result = [element.strip() for element in result]
+            
         except AttributeError:
             logging.error("AttributeError")
-            
+        import pdb; pdb.set_trace()
         self.message = self._pick_up_question(result)
         
         return self.message
@@ -184,8 +189,8 @@ class Parser:
         
         return self.message
     
-    def test_remove_apostrof(self):
-        self.message = self.message.replace("'", "")
+    def remove_apostrof(self):
+        self.message = self.message.replace("'", " ")
         return self.message
     
     

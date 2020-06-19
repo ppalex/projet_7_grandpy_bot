@@ -207,11 +207,11 @@ class TestParser:
         assert parser.remove_stop_words() == result
         
     def test_remove_apostrof(self):
-        result = "lmnop"
+        result = "l m n o p "
         message = "l'm'n'o'p'"
         parser = Parser(message)
         
-        assert parser.test_remove_apostrof() == result
+        assert parser.remove_apostrof() == result
         
     def test_pick_up_question(self):
         message = ["donne moi l'adresse de", "je me trouve et je veux acceder depuis ma position"]

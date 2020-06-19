@@ -17,10 +17,10 @@ def treat_data_from_user(data):
 def parse_data_from_user(data):
     parser = Parser(data)
     parser.set_lowercase()
-    parser.remove_accents()
-    parser.extract_questions()
+    parser.remove_accents()    
     parser.remove_stop_words()
-    parser.test_remove_apostrof()
+    parser.remove_apostrof()
+    parser.extract_questions()
     
     return parser.message
 
@@ -29,7 +29,7 @@ def get_data_from_google_api(data):
 
     google_api = GoogleApi()
     google_api.send_request(data)    
-
+    
     return google_api
 
 
