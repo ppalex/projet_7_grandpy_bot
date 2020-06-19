@@ -15,15 +15,24 @@ function send_data_to_backend(url, data) {
 
 function add_question_to_chat(question){
     let newDiv = document.createElement("div");
-    let newP = document.createElement("p")
+    let newP = document.createElement("p");
+    let newIm = document.createElement("img");
+    let time = document.createElement("span");
+
     let chatbox = document.querySelector("#chatbox");
 
     newDiv.setAttribute("class", "chatbox_question");
+    newIm.setAttribute("src", "../static/images/user.png");
+    newIm.setAttribute("style", "width:100%");
+    time.setAttribute("class", "time-right");
 
+    newDiv.appendChild(newIm);    
     newDiv.appendChild(newP);
+    newDiv.appendChild(time);
     chatbox.appendChild(newDiv);
 
     newP.textContent = question;
+    time.textContent = get_current_time();
 
 }
 
@@ -32,14 +41,42 @@ function add_answer_to_chat(answer){
     let newDiv = document.createElement("div");
     let newP = document.createElement("p")
     let chatbox = document.querySelector("#chatbox");
+    let newIm = document.createElement("img");
+    let time = document.createElement("span");
 
     newDiv.setAttribute("class", "chatbox_answer");
+    newIm.setAttribute("src", "../static/images/grandpy.png");
+    newIm.setAttribute("style", "width:100%");
+    time.setAttribute("class", "time-left");
 
+    newDiv.appendChild(newIm);    
     newDiv.appendChild(newP);
+    newDiv.appendChild(time);
     chatbox.appendChild(newDiv);
 
     newP.textContent = answer;
+    time.textContent = get_current_time();
     
+}
+
+function get_current_time(){
+
+    let today = new Date();
+
+    let hour = today.getHours();
+    let minute = today.getMinutes();
+
+    if (hour < 10) {
+        hour = "0" + hour;
+    }
+
+    if (minute < 10) {
+        minute = "0" + minute;
+    }
+
+    let time =  hour + ":" + minute;
+
+    return time;
 }
 
 

@@ -1,4 +1,4 @@
-from flaskr.models import GoogleApi, WikiApi, Response, Parser
+from flaskr.models import GoogleApi, WikiApi, Response, Parser, Message
 
 import json
 import os
@@ -249,3 +249,30 @@ class TestResponse:
                             "story text")
 
         assert response.formatted_response() == result
+        
+class TestMessage:
+    
+    def test_choose_message_for_address(self, monkeypatch):
+        
+        def mock_json_load(file):
+            return {"message_for_address": 
+                    ["Bien sûr mon poussin ! La voici:"]}
+        
+        result = "Bien sûr mon poussin ! La voici:"        
+        monkeypatch.setattr('flaskr.models.json.load',
+                            mock_json_load)        
+        data_message = Message.get_answers_from_json()
+        
+        assert data_message.choose_message_for_address() == result
+    
+    def test_choose_message_for_story(self, monkeypatch):
+        def mock_json_load(file):
+            return {"message_for_story": 
+                    [""]}
+        
+        result = ""        
+        monkeypatch.setattr('flaskr.models.json.load',
+                            mock_json_load)        
+        data_message = Message.get_answers_from_json()
+        
+        assert data_message.choose_message_for_address() == result

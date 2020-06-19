@@ -5,6 +5,7 @@ import json
 import os
 from nltk.stem import SnowballStemmer
 from nltk.tokenize import word_tokenize
+import random
 
 from unidecode import unidecode
 
@@ -234,7 +235,20 @@ class Parser:
 
 
 class Message:
-    def __init__(self):
+    def __init__(self, data):
+        self.data = data
+    
+    @classmethod
+    def get_answers_from_json(cls):
+        with open(os.path.join('flaskr', 'static', 'answers.json'), encoding='utf-8') as json_file:
+            return cls(json.load(json_file))
+        
+    
+    def choose_message_for_address(self):
+        message = random.choice(self.data['message_for_address'])
+        return message
+    
+    def choose_message_for_story(self):
         pass
 
 

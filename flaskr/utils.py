@@ -6,11 +6,14 @@ def treat_data_from_user(data):
     message = parse_data_from_user(data)
     google_api_data = get_data_from_google_api(message)
     wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
+    extract_text_from_wiki = wiki_api_data.get_extract(page_id)
+    
+    section = parse_data_from_wiki(extract_text_from_wiki)
     
     response = Response(google_api_data.get_latitude(),
                         google_api_data.get_longitude(),
                         google_api_data.get_formatted_address(),
-                        wiki_api_data.get_extract(page_id))
+                        section)
 
     return response.formatted_response()
 
@@ -23,6 +26,12 @@ def parse_data_from_user(data):
     parser.extract_questions()
     
     return parser.message
+
+def parse_data_from_wiki(data):
+    parser = Parser(data)    
+    section = parser.get_section()
+    
+    return section
 
 
 def get_data_from_google_api(data):
@@ -47,3 +56,7 @@ def get_data_from_wiki_api(data):
     pageids_data.send_pageids_request(page_id)
 
     return pageids_data, page_id
+
+
+def get_message_for_adress():
+    pass
