@@ -219,7 +219,17 @@ class TestParser:
         
         parser = Parser("")
         
-        assert parser._pick_up_question(message) == result      
+        assert parser._pick_up_question(message) == result
+        
+    
+    def test_gest_section(self):
+        result = "1ère section contenu de la section" 
+        message = """ Premier paragraphe == 1ère section == contenu de la section 
+                        == 2ème section == contenu de la section"""
+                        
+        parser = Parser(message)
+        
+        assert parser.get_section() == result
     
 
 class TestResponse:

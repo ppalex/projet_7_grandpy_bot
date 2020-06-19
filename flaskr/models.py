@@ -172,7 +172,7 @@ class Parser:
             
         except AttributeError:
             logging.error("AttributeError")
-        import pdb; pdb.set_trace()
+        
         self.message = self._pick_up_question(result)
         
         return self.message
@@ -212,12 +212,25 @@ class Parser:
             if len(intersection) > similarity:
                 result = sentence
         
-        return result
+        return result            
+    
+    
+    def get_section(self):
+        regex = r"""(?<=(\={2}))(.*?)(?=(\={2}))"""
+        result = []        
+        try:
+            matches = re.finditer(regex, self.message, re.DOTALL)
             
-    
-    
-    def get_first_section(self):
-        pass
+            for matchNum, match in enumerate(matches):
+                result.append(match.group())            
+            result = [element.strip() for element in result]
+            
+        except AttributeError:
+            logging.error("AttributeError")
+            
+        self.message = result[0] + " " + result[1]
+        
+        return self.message
 
 
 class Message:
