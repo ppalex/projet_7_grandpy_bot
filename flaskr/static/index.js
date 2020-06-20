@@ -36,27 +36,41 @@ function add_question_to_chat(question){
 
 }
 
-function add_answer_to_chat(answer){
+function add_answer_to_chat(answer, wiki_url){
 
     let newDiv = document.createElement("div");
-    let newP = document.createElement("p")
+    let newP = document.createElement("p");
     let chatbox = document.querySelector("#chatbox");
     let newIm = document.createElement("img");
-    let time = document.createElement("span");
+    let time = document.createElement("span");    
 
     newDiv.setAttribute("class", "chatbox_answer");
     newIm.setAttribute("src", "../static/images/grandpy.png");
     newIm.setAttribute("style", "width:100%");
-    time.setAttribute("class", "time-left");
+    time.setAttribute("class", "time-left");    
 
     newDiv.appendChild(newIm);    
     newDiv.appendChild(newP);
     newDiv.appendChild(time);
     chatbox.appendChild(newDiv);
-
-    newP.textContent = answer;
+   
+    newP.textContent = answer;    
     time.textContent = get_current_time();
-    
+
+    if (wiki_url != null){
+        let link_p = document.createElement("p");
+        let wiki_link = document.createElement("a");
+        let bracket_opened = document.createTextNode('[');
+        let bracket_closed = document.createTextNode(']');
+
+
+        wiki_link.setAttribute("href", "value");
+        newP.appendChild(link_p);
+        wiki_link.textContent = "En savoir plus sur Wikipedia";
+        link_p.appendChild(bracket_opened);
+        link_p.appendChild(wiki_link);
+        link_p.appendChild(bracket_closed);       
+    }   
 }
 
 function get_current_time(){
@@ -94,8 +108,8 @@ form.addEventListener('submit', function (event) {
         let message_for_address = response["message_for_address"];
         let message_for_story = response["message_for_story"]
         console.log(response);
-        add_answer_to_chat(message_for_address);
-        add_answer_to_chat(message_for_story);
+        add_answer_to_chat(message_for_address, null);
+        add_answer_to_chat(message_for_story, "value");
         displayMap(lat, lng);
 
     });  
