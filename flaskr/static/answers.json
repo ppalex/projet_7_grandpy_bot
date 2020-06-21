@@ -1,11 +1,13 @@
 {
     "message_for_address": [
-        "Bien sûr mon poussin ! La voici:",
-        "Bonjour fiston, tiens la voilà:",
-        "Quelle drôle d'idée! Enfin, si tu le désires:",
-        "Sans problème:",
+        "Bien sûr mon poussin ! Voici:",
+        "Bonjour fiston, tiens, je t'envoie ceci:",
+        "Quelle drôle de question! Enfin, si tu le désires:",
+        "Je peux te dire ça sans problème:",
         "Cela faisait longtemps qu'on ne m'avait pas demandé ça: ",
-        "J'ai du un peu réfléchir mais je m'en souviens maintenant:"
+        "J'ai dû un peu réfléchir, mais je m'en souviens maintenant:"
     ],
-    "message_for_story": []
+    "message_for_story": [
+        
+    ]
 }

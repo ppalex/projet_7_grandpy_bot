@@ -239,10 +239,29 @@ class Parser:
             
         except AttributeError:
             logging.error("AttributeError")
-            
-        self.message = result[0] + " : " + result[1]
+             
+        self.message = self._format_section(result)        
+        
+        import pdb; pdb.set_trace()
         
         return self.message
+    
+    def _format_section(self, result_section):
+        text = ""
+        i = 0
+        while (i < len(result_section)-1):
+            if (result_section[i] != '') and (result_section[i+1] != ''):
+                if (result_section[i][0] == '='):
+                    result_section[i] = result_section[i][1:]                   
+                
+                if (result_section[i+1][0] == '='):
+                    result_section[i+1] = result_section[i+1][1:]                   
+                
+                text = result_section[i] + " : " + result_section[i+1]
+                break
+            i+=1
+            
+        return text
 
 
 class Message:
