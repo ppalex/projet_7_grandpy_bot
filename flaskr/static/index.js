@@ -64,7 +64,7 @@ function add_answer_to_chat(answer, wiki_url){
         let bracket_closed = document.createTextNode(']');
 
 
-        wiki_link.setAttribute("href", "value");
+        wiki_link.setAttribute("href", wiki_url);
         newP.appendChild(link_p);
         wiki_link.textContent = "En savoir plus sur Wikipedia";
         link_p.appendChild(bracket_opened);
@@ -105,11 +105,12 @@ form.addEventListener('submit', function (event) {
 
         let lat = response["latitude"];
         let lng = response["longitude"];
+        let url = response["url"];
         let message_for_address = response["message_for_address"];
         let message_for_story = response["message_for_story"]
         console.log(response);
         add_answer_to_chat(message_for_address, null);
-        add_answer_to_chat(message_for_story, "value");
+        add_answer_to_chat(message_for_story, url);
         displayMap(lat, lng);
 
     });  

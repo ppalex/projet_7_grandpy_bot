@@ -105,7 +105,8 @@ class WikiApi:
         payload = {
             "action": "query",
             "format": "json",
-            "prop": "extracts",
+            "prop": "extracts|info|",
+            "inprop":"url",
             "pageids": f"{pageids}",
             "explaintext": "True"}
 
@@ -131,8 +132,7 @@ class WikiApi:
     def get_page_id(self):
         page_id = None
         wiki_data = self.get_data()
-        try:
-            
+        try:            
             page_id = wiki_data['query']['geosearch'][0]['pageid']
         except KeyError:
             logging.error('Key does not exist', exc_info=True)
@@ -148,6 +148,16 @@ class WikiApi:
             logging.error('Key does not exist', exc_info=True)
         
         return extract
+    
+    def get_wiki_url(self, page_id):
+        fullurl = None
+        wiki_data = self.get_data()
+        try:            
+            fullurl = wiki_data['query']['pages'][f"{page_id}"]['fullurl']
+        except KeyError:
+            logging.error('Key does not exist', exc_info=True)
+
+        return fullurl
 
 
 class Parser:
@@ -230,7 +240,7 @@ class Parser:
         except AttributeError:
             logging.error("AttributeError")
             
-        self.message = result[0] + " " + result[1]
+        self.message = result[0] + " : " + result[1]
         
         return self.message
 
@@ -254,10 +264,11 @@ class Message:
 
 
 class Response:
-    def __init__(self,latitude, longitude,
+    def __init__(self,latitude, longitude, url,
                  message_for_address, message_for_story):        
         self.latitude = latitude
         self.longitude = longitude
+        self.url = url
         self.message_for_address = message_for_address
         self.message_for_story = message_for_story
 
@@ -265,6 +276,7 @@ class Response:
         return {            
             "latitude": self.latitude,
             "longitude": self.longitude,
+            "url" : self.url,
             "message_for_address": self.message_for_address,
             "message_for_story": self.message_for_story
         }

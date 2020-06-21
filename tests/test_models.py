@@ -101,7 +101,8 @@ class TestWikiApi:
                                 "pageid": 18618509,
                                 "ns": 0,
                                 "title": "Wikimedia Foundation",
-                                "extract": "Text description of the page"}}}}
+                                "extract": "Text description of the page",
+                                "fullurl": "https://fr.wikipedia.org/wiki/"}}}}
 
     def test_send_geosearch_request(self, monkeypatch):
 
@@ -132,7 +133,8 @@ class TestWikiApi:
                                "pageid": 18618509,
                                "ns": 0,
                                "title": "Wikimedia Foundation",
-                               "extract": "Text description of the page"}}}}
+                               "extract": "Text description of the page",
+                               "fullurl": "https://fr.wikipedia.org/wiki/"}}}}
 
         monkeypatch.setattr("flaskr.models.requests.get",
                             self.MockRequestGetPageId)
@@ -149,7 +151,7 @@ class TestWikiApi:
         monkeypatch.setattr("flaskr.models.requests.get",
                             self.MockRequestGetPageId)
         wikimedia_api = WikiApi()
-        response = wikimedia_api.send_pageids_request(page_id)
+        wikimedia_api.send_pageids_request(page_id)
               
         extract = wikimedia_api.get_extract(page_id)
         
@@ -166,6 +168,22 @@ class TestWikiApi:
         page_id = wikimedia_api.get_page_id()
 
         assert page_id == result
+        
+        
+    def test_get_wiki_url(self, monkeypatch):
+        result = "https://fr.wikipedia.org/wiki/"
+        page_id = 18618509       
+        
+        monkeypatch.setattr("flaskr.models.requests.get",
+                            self.MockRequestGetPageId)
+        wikimedia_api = WikiApi()
+        wikimedia_api.send_pageids_request(page_id)
+        
+        fullurl = wikimedia_api.get_wiki_url(page_id)
+        
+        assert fullurl == result
+        
+        
 
 
 class TestParser:
@@ -222,8 +240,8 @@ class TestParser:
         assert parser._pick_up_question(message) == result
         
     
-    def test_gest_section(self):
-        result = "1ère section contenu de la section" 
+    def test_get_section(self):
+        result = "1ère section : contenu de la section" 
         message = """ Premier paragraphe == 1ère section == contenu de la section 
                         == 2ème section == contenu de la section"""
                         
@@ -239,12 +257,14 @@ class TestResponse:
         result = {
             "latitude": 2.350487,
             "longitude": 48.874847,
+            "url": "https://fr.wikipedia.org/wiki/",
             "message_for_address": "7 Cité Paradis, 75010 Paris, France",
             "message_for_story": "story text"
         }
 
         response = Response(2.350487,
-                            48.874847, 
+                            48.874847,
+                            "https://fr.wikipedia.org/wiki/",
                             "7 Cité Paradis, 75010 Paris, France",
                             "story text")
 

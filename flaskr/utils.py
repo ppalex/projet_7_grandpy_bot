@@ -13,6 +13,7 @@ def treat_data_from_user(data):
     
     response = Response(google_api_data.get_latitude(),
                         google_api_data.get_longitude(),
+                        wiki_api_data.get_wiki_url(page_id),
                         response_address,
                         data_wiki)
 
