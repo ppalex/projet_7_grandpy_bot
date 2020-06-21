@@ -6,31 +6,29 @@
     <div class="chat" id="chatbox">
 
     </div>
-    <div class="container">
-        <form method="post" action="" id="form-question">
-            <div class="div-question">
-                <label for="question">Posez votre question:</label>
-                <textarea class="form-control" rows="3" id="question" name="user_text" required></textarea>
-            </div>
-            <br>
-            <button type="submit" class="btn btn-primary">Envoyer</button>
-        </form>
-    </div>
+    
 </section>
 
 <section>
     <div class="container">
         <div class="row">
-            <div class="col-8">
+            <div class="col-6">
+                <div class="container">
+                    <form method="post" action="" id="form-question">
+                        <div class="div-question">
+                            <label for="question">Posez votre question:</label>
+                            <textarea class="form-control" rows="3" id="question" name="user_text" required></textarea>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-6">
                 <div class="map_container" id="map">
                     
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="wiki_container">
-                    
-                </div>
-            </div>
+            </div>            
         </div>
     </div>
 </section>

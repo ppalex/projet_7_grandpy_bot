@@ -21,7 +21,7 @@ html {
 
   .chat {
     overflow-y: auto;
-    height: 250px;
+    height: 375px;
   }
 
   .chatbox_question {
@@ -60,7 +60,7 @@ html {
 
 
   .map_container {
-    width: 400px;
+    width: 500px;
     height: 400px;
   }
 
