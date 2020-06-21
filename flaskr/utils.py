@@ -26,7 +26,7 @@ def parse_data_from_user(data):
     parser.remove_stop_words()
     parser.remove_apostrof()
     parser.extract_questions()
-    
+
     return parser.message
 
 def parse_data_from_wiki(data):

@@ -45,28 +45,34 @@ class GoogleApi:
 
     def get_formatted_address(self):
         formatted_address = []
-
-        if self.get_data():
-            formatted_address = self.get_data(
-            )['results'][0]['formatted_address']
+        try:
+            if self.get_data():
+                formatted_address = self.get_data(
+                )['results'][0]['formatted_address']
+        except KeyError:
+            logging.error("Can't get formatted addresss", exc_info=True)
 
         return formatted_address
 
     def get_latitude(self):
         latitude = None
-
-        if self.get_data():
-            latitude = self.get_data(
-            )['results'][0]['geometry']['location']['lat']
+        try:
+            if self.get_data():
+                latitude = self.get_data(
+                )['results'][0]['geometry']['location']['lat']
+        except KeyError:
+            logging.error("Can't get latitude", exc_info=True)
 
         return latitude
 
     def get_longitude(self):
         longitude = None
-
-        if self.get_data():
-            longitude = self.get_data(
-            )['results'][0]['geometry']['location']['lng']
+        try:
+            if self.get_data():
+                longitude = self.get_data(
+                )['results'][0]['geometry']['location']['lng']
+        except KeyError:
+            logging.error("Can't get longitude", exc_info=True)
 
         return longitude
 
@@ -135,7 +141,7 @@ class WikiApi:
         try:            
             page_id = wiki_data['query']['geosearch'][0]['pageid']
         except KeyError:
-            logging.error('Key does not exist', exc_info=True)
+            logging.error("Can't get page id", exc_info=True)
 
         return page_id
 
@@ -145,7 +151,7 @@ class WikiApi:
         try:            
             extract = wiki_data['query']['pages'][f"{page_id}"]['extract']
         except KeyError:
-            logging.error('Key does not exist', exc_info=True)
+            logging.error("Can't get extract", exc_info=True)
         
         return extract
     
@@ -155,7 +161,7 @@ class WikiApi:
         try:            
             fullurl = wiki_data['query']['pages'][f"{page_id}"]['fullurl']
         except KeyError:
-            logging.error('Key does not exist', exc_info=True)
+            logging.error("Can't get extract", exc_info=True)
 
         return fullurl
 
@@ -192,12 +198,14 @@ class Parser:
     def remove_stop_words(self):
         
         message = self.message.split()
-
-        with open(os.path.join('flaskr', 'static', 'fr.json'), encoding='utf-8') as json_file:
-            stop_words = json.load(json_file)
-            
-        result = [word for word in message if word not in stop_words]        
-        self.message = " ".join(result)
+        try:
+            with open(os.path.join('flaskr', 'static', 'fr.json'), encoding='utf-8') as json_file:
+                stop_words = json.load(json_file)
+                
+            result = [word for word in message if word not in stop_words]        
+            self.message = " ".join(result)
+        except Exception as e:
+            logging.error("Can't open fr.json", exc_info=True)
         
         return self.message
     
@@ -207,11 +215,13 @@ class Parser:
     
     
     def _pick_up_question(self, dic):
-        result = ""
-        
+        result = ""        
         stemmer = SnowballStemmer("french")
-        with open(os.path.join('flaskr', 'static', 'detect_word.json'), encoding='utf-8') as json_file:
-            words = json.load(json_file)
+        try:
+            with open(os.path.join('flaskr', 'static', 'detect_word.json'), encoding='utf-8') as json_file:
+                words = json.load(json_file)
+        except Exception as e:
+            logging.error("Can't open detect_word.json", exc_info=True)
 
         stem_words = [stemmer.stem(w) for w in words]
     
@@ -240,10 +250,8 @@ class Parser:
         except AttributeError:
             logging.error("AttributeError")
              
-        self.message = self._format_section(result)        
-        
-        import pdb; pdb.set_trace()
-        
+        self.message = self._format_section(result)  
+
         return self.message
     
     def _format_section(self, result_section):
@@ -270,8 +278,11 @@ class Message:
     
     @classmethod
     def get_answers_from_json(cls):
-        with open(os.path.join('flaskr', 'static', 'answers.json'), encoding='utf-8') as json_file:
-            return cls(json.load(json_file))
+        try:
+            with open(os.path.join('flaskr', 'static', 'answers.json'), encoding='utf-8') as json_file:
+                return cls(json.load(json_file))
+        except Exception as e:
+            logging.error("Can't open answers.json", exc_info=True)
         
     
     def choose_message_for_address(self):
