@@ -1,15 +1,26 @@
 html {
     position: relative;
     min-height: 100%;
-    padding-bottom:100px;
+    padding-bottom:5px;
   }
   body {
-    margin-bottom: 60px; /* Margin bottom by footer height */
+    margin-bottom: 100px; /* Margin bottom by footer height */
   }
+
 
   section {
     padding: 20px;
   }
+
+  .navbar_title {
+    color: white;
+    font-size: x-large;
+    font-family: cursive;
+    text-align: center;
+  }
+
+  
+
   .footer {
     position: absolute;
     bottom: 0;
@@ -61,7 +72,7 @@ html {
 
   .map_container {
     width: 500px;
-    height: 400px;
+    height: 340px;
   }
 
 
