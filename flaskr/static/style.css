@@ -1,3 +1,19 @@
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -12,11 +28,22 @@ html {
     padding: 20px;
   }
 
+  .col-lg-6 {
+    padding-bottom: 20px;
+  }
+
   .navbar_title {
     color: white;
     font-size: x-large;
     font-family: cursive;
     text-align: center;
+  }
+
+  .container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
   }
   
 
@@ -72,6 +99,9 @@ html {
   .map_container {
     width: 500px;
     height: 340px;
+    position: relative;
+    padding-bottom:20px;
+    padding-left: 20px;
   }
 
 
