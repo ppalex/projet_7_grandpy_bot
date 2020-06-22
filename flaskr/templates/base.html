@@ -11,16 +11,19 @@
 </head>
 
 <body>
-  <header>
-    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-      <!-- Brand/logo -->
-      <a class="navbar-brand" href="">
-        <img src="../static/images/logo.svg" alt="logo" style="width:40px;">
-      </a>
-      <span class="navbar_title">
-        Un problème sans solution est un problème mal posé
-      </span>
-    </nav>
+  <header class="row">
+    <div class="col-lg-12">
+      <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <!-- Brand/logo -->
+        <a class="navbar-brand" href="">
+          <img src="../static/images/logo.svg" alt="logo" style="width:40px;">
+        </a>
+        <span class="navbar_title">
+          Un problème sans solution est un problème mal posé
+        </span>
+      </nav>
+    </div>
+   
   </header>
 
   {% block main %}
@@ -31,8 +34,8 @@
 </body>
 
 <!-- Footer -->
-<footer class="footer">  
-  <div class="footer-copyright text-center py-3">
+<footer class="row">  
+  <div class="col-lg-12">
     © 2020 Copyright: Alexandre Prieto Pantoja
     <a class="link-ic" href="https://www.linkedin.com/in/alexandre-prieto-pantoja-735404b6/">
       <img src="../static/images/linkedin.png" alt="" style="width:40px;">
@@ -41,8 +44,7 @@
      <a class="github-ic">
       <img src="../static/images/github.png" alt="https://github.com/ppalex" style="width:40px;">
     </a>
-  </div>
- 
+  </div> 
 
 </footer>
 
