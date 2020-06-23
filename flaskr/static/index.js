@@ -1,4 +1,4 @@
-import {displayMap} from './google_map.js'
+import { displayMap } from './google_map.js'
 
 
 let form = document.querySelector("#form-question");
@@ -9,11 +9,11 @@ function send_data_to_backend(url, data) {
         method: "POST",
         body: data
     })
-    .then(response => response.json())
-    .catch(error => console.log(error));
+        .then(response => response.json())
+        .catch(error => console.log(error));
 }
 
-function add_question_to_chat(question){
+function add_question_to_chat(question) {
     let newDiv = document.createElement("div");
     let newP = document.createElement("p");
     let newIm = document.createElement("img");
@@ -26,7 +26,7 @@ function add_question_to_chat(question){
     newIm.setAttribute("style", "width:100%");
     time.setAttribute("class", "time-right");
 
-    newDiv.appendChild(newIm);    
+    newDiv.appendChild(newIm);
     newDiv.appendChild(newP);
     newDiv.appendChild(time);
     chatbox.appendChild(newDiv);
@@ -36,28 +36,28 @@ function add_question_to_chat(question){
 
 }
 
-function add_answer_to_chat(answer, wiki_url){
+function add_answer_to_chat(answer, wiki_url) {
 
     let newDiv = document.createElement("div");
     let newP = document.createElement("p");
     let chatbox = document.querySelector("#chatbox");
     let newIm = document.createElement("img");
-    let time = document.createElement("span");    
+    let time = document.createElement("span");
 
     newDiv.setAttribute("class", "chatbox_answer");
     newIm.setAttribute("src", "../static/images/grandpy.png");
     newIm.setAttribute("style", "width:100%");
-    time.setAttribute("class", "time-left");    
+    time.setAttribute("class", "time-left");
 
-    newDiv.appendChild(newIm);    
+    newDiv.appendChild(newIm);
     newDiv.appendChild(newP);
     newDiv.appendChild(time);
     chatbox.appendChild(newDiv);
-   
-    newP.textContent = answer;    
+
+    newP.textContent = answer;
     time.textContent = get_current_time();
 
-    if (wiki_url != null){
+    if (wiki_url != null) {
         let link_p = document.createElement("p");
         let wiki_link = document.createElement("a");
         let bracket_opened = document.createTextNode('[');
@@ -69,11 +69,11 @@ function add_answer_to_chat(answer, wiki_url){
         wiki_link.textContent = "En savoir plus sur Wikipedia";
         link_p.appendChild(bracket_opened);
         link_p.appendChild(wiki_link);
-        link_p.appendChild(bracket_closed);       
-    }   
+        link_p.appendChild(bracket_closed);
+    }
 }
 
-function get_current_time(){
+function get_current_time() {
 
     let today = new Date();
 
@@ -88,7 +88,7 @@ function get_current_time(){
         minute = "0" + minute;
     }
 
-    let time =  hour + ":" + minute;
+    let time = hour + ":" + minute;
 
     return time;
 }
@@ -98,22 +98,30 @@ form.addEventListener('submit', function (event) {
 
     event.preventDefault();
     let question = document.querySelector('#question').value;
-    add_question_to_chat(question);
 
-    send_data_to_backend("/form", new FormData(form))
-    .then(response => {
+    if ((/[A-Za-z,;'"\séà-ç]+\?/g).test(question) !== true) {
+        alert("Les données ne sont pas valides.");
+    }
 
-        let lat = response["latitude"];
-        let lng = response["longitude"];
-        let url = response["url"];
-        let message_for_address = response["message_for_address"];
-        let message_for_story = response["message_for_story"]
-        console.log(response);
-        add_answer_to_chat(message_for_address, null);
-        add_answer_to_chat(message_for_story, url);
-        displayMap(lat, lng);
+    else {
 
-    });  
+        add_question_to_chat(question);
+
+        send_data_to_backend("/form", new FormData(form))
+            .then(response => {
+
+                let lat = response["latitude"];
+                let lng = response["longitude"];
+                let url = response["url"];
+                let message_for_address = response["message_for_address"];
+                let message_for_story = response["message_for_story"]
+                console.log(response);
+                add_answer_to_chat(message_for_address, null);
+                add_answer_to_chat(message_for_story, url);
+                displayMap(lat, lng);
+
+            });
+    }
 });
 
 

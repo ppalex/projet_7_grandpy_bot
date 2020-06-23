@@ -31,7 +31,7 @@ class GoogleApi:
         except requests.exceptions.TooManyRedirects:
             logging.error("Bad url", exc_info=True)
         except requests.exceptions.RequestException as e:
-            logging.error("Bad request",exc_info=True)
+            logging.error("Bad request", exc_info=True)
             raise SystemExit(e)
 
         if response.status_code == 200:
@@ -112,7 +112,7 @@ class WikiApi:
             "action": "query",
             "format": "json",
             "prop": "extracts|info|",
-            "inprop":"url",
+            "inprop": "url",
             "pageids": f"{pageids}",
             "explaintext": "True"}
 
@@ -138,7 +138,7 @@ class WikiApi:
     def get_page_id(self):
         page_id = None
         wiki_data = self.get_data()
-        try:            
+        try:
             page_id = wiki_data['query']['geosearch'][0]['pageid']
         except KeyError:
             logging.error("Can't get page id", exc_info=True)
@@ -148,17 +148,17 @@ class WikiApi:
     def get_extract(self, page_id):
         extract = None
         wiki_data = self.get_data()
-        try:            
+        try:
             extract = wiki_data['query']['pages'][f"{page_id}"]['extract']
         except KeyError:
             logging.error("Can't get extract", exc_info=True)
-        
+
         return extract
-    
+
     def get_wiki_url(self, page_id):
         fullurl = None
         wiki_data = self.get_data()
-        try:            
+        try:
             fullurl = wiki_data['query']['pages'][f"{page_id}"]['fullurl']
         except KeyError:
             logging.error("Can't get extract", exc_info=True)
@@ -169,133 +169,134 @@ class WikiApi:
 class Parser:
     def __init__(self, message):
         self.message = message
-        
+
     def set_lowercase(self):
         self.message = self.message.lower()
         return self.message
-    
+
     def remove_accents(self):
-        self.message = unidecode(self.message)    
+        self.message = unidecode(self.message)
         return self.message
-    
+
     def extract_questions(self):
         regex = r"""(^|(?<=[.?!,]))\s*[A-Za-z,;'\"\s\-]+\?"""
         result = []
         try:
             matches = re.finditer(regex, self.message)
-            
+
             for matchNum, match in enumerate(matches):
-                result.append(match.group())            
+                result.append(match.group())
             result = [element.strip() for element in result]
-            
+
         except AttributeError:
             logging.error("AttributeError")
-        
+
         self.message = self._pick_up_question(result)
-        
+
         return self.message
-    
+
     def remove_stop_words(self):
-        
+
         message = self.message.split()
         try:
-            with open(os.path.join('flaskr', 'static', 'fr.json'), encoding='utf-8') as json_file:
+            with open(os.path.join('flaskr', 'static', 'fr.json'),
+                      encoding='utf-8') as json_file:
                 stop_words = json.load(json_file)
-                
-            result = [word for word in message if word not in stop_words]        
+
+            result = [word for word in message if word not in stop_words]
             self.message = " ".join(result)
-        except Exception as e:
+        except Exception:
             logging.error("Can't open fr.json", exc_info=True)
-        
+
         return self.message
-    
+
     def remove_apostrof(self):
         self.message = self.message.replace("'", " ")
         return self.message
-    
-    
+
     def _pick_up_question(self, dic):
-        result = ""        
+        result = ""
         stemmer = SnowballStemmer("french")
         try:
-            with open(os.path.join('flaskr', 'static', 'detect_word.json'), encoding='utf-8') as json_file:
+            with open(os.path.join('flaskr', 'static', 'detect_word.json'),
+                      encoding='utf-8') as json_file:
                 words = json.load(json_file)
-        except Exception as e:
+        except Exception:
             logging.error("Can't open detect_word.json", exc_info=True)
 
         stem_words = [stemmer.stem(w) for w in words]
-    
+
         similarity = 0
         for sentence in dic:
             token_sentence = word_tokenize(sentence)
             stem_sentence = [stemmer.stem(s) for s in token_sentence]
-            intersection = [value for value in stem_sentence if value in stem_words]
-           
+            intersection = [
+                value for value in stem_sentence if value in stem_words]
+
             if len(intersection) > similarity:
                 result = sentence
-        
-        return result            
-    
-    
+
+        return result
+
     def get_section(self):
         regex = r"""(?<=(\={2}))(.*?)(?=(\={2}))"""
-        result = []        
+        result = []
         try:
             matches = re.finditer(regex, self.message, re.DOTALL)
-            
+
             for matchNum, match in enumerate(matches):
-                result.append(match.group())            
+                result.append(match.group())
             result = [element.strip() for element in result]
-            
+
         except AttributeError:
             logging.error("AttributeError")
-             
-        self.message = self._format_section(result)  
+
+        self.message = self._format_section(result)
 
         return self.message
-    
+
     def _format_section(self, result_section):
         text = ""
         i = 0
         while (i < len(result_section)-1):
             if (result_section[i] != '') and (result_section[i+1] != ''):
                 if (result_section[i][0] == '='):
-                    result_section[i] = result_section[i][1:]                   
-                
+                    result_section[i] = result_section[i][1:]
+
                 if (result_section[i+1][0] == '='):
-                    result_section[i+1] = result_section[i+1][1:]                   
-                
+                    result_section[i+1] = result_section[i+1][1:]
+
                 text = result_section[i] + " : " + result_section[i+1]
                 break
-            i+=1
-            
+            i += 1
+
         return text
 
 
 class Message:
     def __init__(self, data):
         self.data = data
-    
+
     @classmethod
     def get_answers_from_json(cls):
         try:
-            with open(os.path.join('flaskr', 'static', 'answers.json'), encoding='utf-8') as json_file:
+            with open(os.path.join('flaskr', 'static', 'answers.json'),
+                      encoding='utf-8') as json_file:
                 return cls(json.load(json_file))
-        except Exception as e:
+        except Exception:
             logging.error("Can't open answers.json", exc_info=True)
-        
-    
+
     def choose_message_for_address(self):
         message = random.choice(self.data['message_for_address'])
         return message
-    
+
     def choose_message_for_story(self):
         pass
 
 
 class Response:
-    def __init__(self,latitude, longitude, url,
-                 message_for_address, message_for_story):        
+    def __init__(self, latitude, longitude, url,
+                 message_for_address, message_for_story):
         self.latitude = latitude
         self.longitude = longitude
         self.url = url
@@ -303,10 +304,10 @@ class Response:
         self.message_for_story = message_for_story
 
     def formatted_response(self):
-        return {            
+        return {
             "latitude": self.latitude,
             "longitude": self.longitude,
-            "url" : self.url,
+            "url": self.url,
             "message_for_address": self.message_for_address,
             "message_for_story": self.message_for_story
         }

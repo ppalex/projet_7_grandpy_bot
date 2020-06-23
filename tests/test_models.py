@@ -1,9 +1,7 @@
-from flaskr.models import GoogleApi, WikiApi, Response, Parser, Message
-
 import json
 import os
 
-from nltk.stem import SnowballStemmer
+from flaskr.models import GoogleApi, Message, Parser, Response, WikiApi
 
 
 class TestGoogleApi:
@@ -15,7 +13,8 @@ class TestGoogleApi:
         def json(self):
             return {"results": [
                     {"address_components": [{"long_name": "Paris"}],
-                        "formatted_address": "7 Cité Paradis, 75010 Paris, France",
+                        "formatted_address":
+                            "7 Cité Paradis, 75010 Paris, France",
                         "geometry": {"location":
                                      {"lat": 48.874847, "lng": 2.350487}}}
                     ]}
@@ -144,17 +143,17 @@ class TestWikiApi:
         assert response == results
 
     def test_get_extract(self, monkeypatch):
-        
+
         result = "Text description of the page"
         page_id = 18618509
-        
+
         monkeypatch.setattr("flaskr.models.requests.get",
                             self.MockRequestGetPageId)
         wikimedia_api = WikiApi()
         wikimedia_api.send_pageids_request(page_id)
-              
+
         extract = wikimedia_api.get_extract(page_id)
-        
+
         assert extract == result
 
     def test_get_page_id(self, monkeypatch):
@@ -168,22 +167,19 @@ class TestWikiApi:
         page_id = wikimedia_api.get_page_id()
 
         assert page_id == result
-        
-        
+
     def test_get_wiki_url(self, monkeypatch):
         result = "https://fr.wikipedia.org/wiki/"
-        page_id = 18618509       
-        
+        page_id = 18618509
+
         monkeypatch.setattr("flaskr.models.requests.get",
                             self.MockRequestGetPageId)
         wikimedia_api = WikiApi()
         wikimedia_api.send_pageids_request(page_id)
-        
+
         fullurl = wikimedia_api.get_wiki_url(page_id)
-        
+
         assert fullurl == result
-        
-        
 
 
 class TestParser:
@@ -191,64 +187,66 @@ class TestParser:
         result = "hello world"
         message = "HELLO WORLD"
         parser = Parser(message)
-        
-        assert parser.set_lowercase() == result       
+
+        assert parser.set_lowercase() == result
 
     def test_remove_accents(self):
         result = "eeaaaun"
         message = "éèàâäùñ"
         parser = Parser(message)
-        
+
         assert parser.remove_accents() == result
-        
+
     def test_extract_questions(self):
-        result = "Est-ce que tu pourrais m indiquer l adresse de la tour eiffel?"
-        
+        result = "Est-ce que tu pourrais m indiquer \
+                    l adresse de la tour eiffel?"
+
         message = """"Bonsoir Grandpy, Comment vas-tu?
                         J espere que tu as passé une belle semaine.
-                        Est-ce que tu pourrais m indiquer l adresse de la tour eiffel?""" 
-                        
+                        Est-ce que tu pourrais m indiquer \
+                            l adresse de la tour eiffel?"""
+
         parser = Parser(message)
-        
-        assert parser.extract_questions() == result       
-        
-        
+
+        assert parser.extract_questions() == result
+
     def test_remove_stop_words(self):
         result = ""
-        
-        with open(os.path.join('flaskr', 'static', 'fr.json'), encoding='utf-8') as json_file:
+
+        with open(os.path.join('flaskr', 'static', 'fr.json'),
+                  encoding='utf-8') as json_file:
             message = json.load(json_file)
-            
-        message = " ".join(message)        
-        parser = Parser(message)        
-        
+
+        message = " ".join(message)
+        parser = Parser(message)
+
         assert parser.remove_stop_words() == result
-        
+
     def test_remove_apostrof(self):
         result = "l m n o p "
         message = "l'm'n'o'p'"
         parser = Parser(message)
-        
+
         assert parser.remove_apostrof() == result
-        
+
     def test_pick_up_question(self):
-        message = ["donne moi l'adresse de", "je me trouve et je veux acceder depuis ma position"]
+        message = ["donne moi l'adresse de",
+                   "je me trouve et je veux acceder depuis ma position"]
         result = "je me trouve et je veux acceder depuis ma position"
-        
+
         parser = Parser("")
-        
+
         assert parser._pick_up_question(message) == result
-        
-    
+
     def test_get_section(self):
-        result = "1ère section : contenu de la section" 
-        message = """ Premier paragraphe == 1ère section == contenu de la section 
+        result = "1ère section : contenu de la section"
+        message = """ Premier paragraphe == 1ère section == contenu de la section
                         == 2ème section == contenu de la section"""
-                        
+
         parser = Parser(message)
-        
+
         assert parser.get_section() == result
-    
+
 
 class TestResponse:
 
@@ -269,30 +267,31 @@ class TestResponse:
                             "story text")
 
         assert response.formatted_response() == result
-        
+
+
 class TestMessage:
-    
+
     def test_choose_message_for_address(self, monkeypatch):
-        
+
         def mock_json_load(file):
-            return {"message_for_address": 
+            return {"message_for_address":
                     ["Bien sûr mon poussin ! La voici:"]}
-        
-        result = "Bien sûr mon poussin ! La voici:"        
+
+        result = "Bien sûr mon poussin ! La voici:"
         monkeypatch.setattr('flaskr.models.json.load',
-                            mock_json_load)        
+                            mock_json_load)
         data_message = Message.get_answers_from_json()
-        
+
         assert data_message.choose_message_for_address() == result
-    
+
     def test_choose_message_for_story(self, monkeypatch):
         def mock_json_load(file):
-            return {"message_for_story": 
+            return {"message_for_story":
                     [""]}
-        
-        result = ""        
+
+        result = ""
         monkeypatch.setattr('flaskr.models.json.load',
-                            mock_json_load)        
+                            mock_json_load)
         data_message = Message.get_answers_from_json()
-        
+
         assert data_message.choose_message_for_address() == result

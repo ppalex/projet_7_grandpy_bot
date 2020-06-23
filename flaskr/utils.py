@@ -7,10 +7,11 @@ def treat_data_from_user(data):
     google_api_data = get_data_from_google_api(message)
     wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
     extract_text_from_wiki = wiki_api_data.get_extract(page_id)
-    
+
     data_wiki = parse_data_from_wiki(extract_text_from_wiki)
-    response_address = get_message_for_adress() + " " + google_api_data.get_formatted_address()
-    
+    response_address = get_message_for_adress(
+    ) + " " + google_api_data.get_formatted_address()
+
     response = Response(google_api_data.get_latitude(),
                         google_api_data.get_longitude(),
                         wiki_api_data.get_wiki_url(page_id),
@@ -19,28 +20,30 @@ def treat_data_from_user(data):
 
     return response.formatted_response()
 
+
 def parse_data_from_user(data):
     parser = Parser(data)
     parser.set_lowercase()
-    parser.remove_accents()    
+    parser.remove_accents()
     parser.remove_stop_words()
     parser.remove_apostrof()
     parser.extract_questions()
 
     return parser.message
 
+
 def parse_data_from_wiki(data):
-    parser = Parser(data)    
+    parser = Parser(data)
     section = parser.get_section()
-    
+
     return section
 
 
 def get_data_from_google_api(data):
 
     google_api = GoogleApi()
-    google_api.send_request(data)    
-    
+    google_api.send_request(data)
+
     return google_api
 
 
