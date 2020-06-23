@@ -88,6 +88,13 @@ class GoogleApi:
 
         return status
 
+    def set_status(self, new_status):
+        try:
+            if self.get_data():
+                self.get_data()['status'] = new_status
+        except KeyError:
+            logging.error("Can't get status", exc_info=True)
+
 
 class WikiApi:
     def __init__(self):
@@ -148,22 +155,24 @@ class WikiApi:
         return self._data
 
     def get_page_id(self):
-        page_id = None
+
         wiki_data = self.get_data()
         try:
             page_id = wiki_data['query']['geosearch'][0]['pageid']
-        except KeyError:
+        except Exception:
             logging.error("Can't get page id", exc_info=True)
+            page_id = None
 
         return page_id
 
     def get_extract(self, page_id):
-        extract = None
+
         wiki_data = self.get_data()
         try:
             extract = wiki_data['query']['pages'][f"{page_id}"]['extract']
         except KeyError:
             logging.error("Can't get extract", exc_info=True)
+            extract = None
 
         return extract
 
@@ -304,7 +313,7 @@ class Message:
 
     def get_message_for_story(self):
         pass
-    
+
     def get_message_for_error(self):
         message = random.choice(self.data['message_for_error'])
         return message

@@ -5,9 +5,12 @@ def treat_data_from_user(data):
 
     message = parse_data_from_user(data)
     google_api_data = get_data_from_google_api(message)
-    
+    wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
+
+    check_page_id(google_api_data, page_id)
+
     if (google_api_data.get_status() == 'OK'):
-        wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
+
         extract_text_from_wiki = wiki_api_data.get_extract(page_id)
 
         data_wiki = parse_data_from_wiki(extract_text_from_wiki)
@@ -83,3 +86,8 @@ def get_message_for_adress():
 def get_message_for_error():
     data_message = Message.get_answers_from_json()
     return data_message.get_message_for_error()
+
+
+def check_page_id(google_api, page_id):
+    if page_id is None:
+        google_api.set_status("NOT OK")

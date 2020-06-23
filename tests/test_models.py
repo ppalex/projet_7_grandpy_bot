@@ -82,6 +82,18 @@ class TestGoogleApi:
 
         assert status == result
 
+    def test_set_status(self, monkeypatch):
+        result = "NOT OK"
+
+        monkeypatch.setattr('flaskr.models.requests.get', self.MockRequestGet)
+        google_api = GoogleApi()
+        google_api.send_request("OpenClassrooms")
+
+        google_api.set_status("NOT OK")
+        status = google_api.get_status()
+
+        assert status == result
+
 
 class TestWikiApi:
 
@@ -312,8 +324,7 @@ class TestMessage:
     #     data_message = Message.get_answers_from_json()
 
     #     assert data_message.get_message_for_address() == result
-    
-    
+
     def test_get_message_for_error(self, monkeypatch):
         def mock_json_load(file):
             return {"message_for_error":
