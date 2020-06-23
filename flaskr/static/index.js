@@ -110,15 +110,24 @@ form.addEventListener('submit', function (event) {
         send_data_to_backend("/form", new FormData(form))
             .then(response => {
 
-                let lat = response["latitude"];
-                let lng = response["longitude"];
-                let url = response["url"];
-                let message_for_address = response["message_for_address"];
-                let message_for_story = response["message_for_story"]
-                console.log(response);
-                add_answer_to_chat(message_for_address, null);
-                add_answer_to_chat(message_for_story, url);
-                displayMap(lat, lng);
+
+                let status = response["status"];
+
+                if (status == "OK") {
+                    let lat = response["latitude"];
+                    let lng = response["longitude"];
+                    let url = response["url"];
+                    let message_for_address = response["message_for_address"];
+                    let message_for_story = response["message_for_story"]
+                    console.log(response);
+                    add_answer_to_chat(message_for_address, null);
+                    add_answer_to_chat(message_for_story, url);
+                    displayMap(lat, lng);
+                }
+                else {
+                    let message_for_error = response["message_for_error"];
+                    add_answer_to_chat(message_for_error, null);
+                }            
 
             });
     }

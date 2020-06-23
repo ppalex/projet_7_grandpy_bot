@@ -17,7 +17,8 @@ class TestGoogleApi:
                             "7 Cité Paradis, 75010 Paris, France",
                         "geometry": {"location":
                                      {"lat": 48.874847, "lng": 2.350487}}}
-                    ]}
+                    ],
+                    "status": "OK"}
 
     def test_send_request(self, monkeypatch):
         results = {
@@ -29,7 +30,8 @@ class TestGoogleApi:
                     "geometry": {"location":
                                  {"lat": 48.874847, "lng": 2.350487}}
                 }
-            ]
+            ],
+            "status": 'OK'
         }
 
         monkeypatch.setattr('flaskr.models.requests.get', self.MockRequestGet)
@@ -68,6 +70,17 @@ class TestGoogleApi:
         latitude = google_api.get_latitude()
 
         assert latitude == result
+
+    def test_get_status(self, monkeypatch):
+        result = "OK"
+
+        monkeypatch.setattr('flaskr.models.requests.get', self.MockRequestGet)
+        google_api = GoogleApi()
+        google_api.send_request("OpenClassrooms")
+
+        status = google_api.get_status()
+
+        assert status == result
 
 
 class TestWikiApi:
@@ -198,13 +211,13 @@ class TestParser:
         assert parser.remove_accents() == result
 
     def test_extract_questions(self):
-        result = "Est-ce que tu pourrais m indiquer \
-                    l adresse de la tour eiffel?"
+        result = """Est-ce que tu pourrais m indiquer
+                    l adresse de la tour eiffel?"""
 
         message = """"Bonsoir Grandpy, Comment vas-tu?
-                        J espere que tu as passé une belle semaine.
-                        Est-ce que tu pourrais m indiquer \
-                            l adresse de la tour eiffel?"""
+                    J espere que tu as passé une belle semaine.
+                    Est-ce que tu pourrais m indiquer
+                    l adresse de la tour eiffel?"""
 
         parser = Parser(message)
 
@@ -253,25 +266,29 @@ class TestResponse:
     def test_formatted_response(self):
 
         result = {
+            "status": "OK",
             "latitude": 2.350487,
             "longitude": 48.874847,
             "url": "https://fr.wikipedia.org/wiki/",
             "message_for_address": "7 Cité Paradis, 75010 Paris, France",
-            "message_for_story": "story text"
+            "message_for_story": "story text",
+            "message_for_error": "error text"
         }
 
-        response = Response(2.350487,
+        response = Response("OK",
+                            2.350487,
                             48.874847,
                             "https://fr.wikipedia.org/wiki/",
                             "7 Cité Paradis, 75010 Paris, France",
-                            "story text")
+                            "story text",
+                            "error text")
 
         assert response.formatted_response() == result
 
 
 class TestMessage:
 
-    def test_choose_message_for_address(self, monkeypatch):
+    def test_get_message_for_address(self, monkeypatch):
 
         def mock_json_load(file):
             return {"message_for_address":
@@ -282,16 +299,29 @@ class TestMessage:
                             mock_json_load)
         data_message = Message.get_answers_from_json()
 
-        assert data_message.choose_message_for_address() == result
+        assert data_message.get_message_for_address() == result
 
-    def test_choose_message_for_story(self, monkeypatch):
+    # def test_get_message_for_story(self, monkeypatch):
+    #     def mock_json_load(file):
+    #         return {"message_for_story":
+    #                 [""]}
+
+    #     result = ""
+    #     monkeypatch.setattr('flaskr.models.json.load',
+    #                         mock_json_load)
+    #     data_message = Message.get_answers_from_json()
+
+    #     assert data_message.get_message_for_address() == result
+    
+    
+    def test_get_message_for_error(self, monkeypatch):
         def mock_json_load(file):
-            return {"message_for_story":
-                    [""]}
+            return {"message_for_error":
+                    ["error"]}
 
-        result = ""
+        result = "error"
         monkeypatch.setattr('flaskr.models.json.load',
                             mock_json_load)
         data_message = Message.get_answers_from_json()
 
-        assert data_message.choose_message_for_address() == result
+        assert data_message.get_message_for_error() == result

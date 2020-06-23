@@ -5,18 +5,30 @@ def treat_data_from_user(data):
 
     message = parse_data_from_user(data)
     google_api_data = get_data_from_google_api(message)
-    wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
-    extract_text_from_wiki = wiki_api_data.get_extract(page_id)
+    
+    if (google_api_data.get_status() == 'OK'):
+        wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
+        extract_text_from_wiki = wiki_api_data.get_extract(page_id)
 
-    data_wiki = parse_data_from_wiki(extract_text_from_wiki)
-    response_address = get_message_for_adress(
-    ) + " " + google_api_data.get_formatted_address()
+        data_wiki = parse_data_from_wiki(extract_text_from_wiki)
+        response_address = get_message_for_adress(
+        ) + " " + google_api_data.get_formatted_address()
 
-    response = Response(google_api_data.get_latitude(),
-                        google_api_data.get_longitude(),
-                        wiki_api_data.get_wiki_url(page_id),
-                        response_address,
-                        data_wiki)
+        response = Response(google_api_data.get_status(),
+                            google_api_data.get_latitude(),
+                            google_api_data.get_longitude(),
+                            wiki_api_data.get_wiki_url(page_id),
+                            response_address,
+                            data_wiki,
+                            None)
+    else:
+        response = Response(google_api_data.get_status(),
+                            None,
+                            None,
+                            None,
+                            None,
+                            None,
+                            get_message_for_error())
 
     return response.formatted_response()
 
@@ -65,4 +77,9 @@ def get_data_from_wiki_api(data):
 
 def get_message_for_adress():
     data_message = Message.get_answers_from_json()
-    return data_message.choose_message_for_address()
+    return data_message.get_message_for_address()
+
+
+def get_message_for_error():
+    data_message = Message.get_answers_from_json()
+    return data_message.get_message_for_error()

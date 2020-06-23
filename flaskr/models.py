@@ -76,6 +76,18 @@ class GoogleApi:
 
         return longitude
 
+    def get_status(self):
+        status = ""
+
+        try:
+            if self.get_data():
+                status = self.get_data(
+                )['status']
+        except KeyError:
+            logging.error("Can't get status", exc_info=True)
+
+        return status
+
 
 class WikiApi:
     def __init__(self):
@@ -286,28 +298,37 @@ class Message:
         except Exception:
             logging.error("Can't open answers.json", exc_info=True)
 
-    def choose_message_for_address(self):
+    def get_message_for_address(self):
         message = random.choice(self.data['message_for_address'])
         return message
 
-    def choose_message_for_story(self):
+    def get_message_for_story(self):
         pass
+    
+    def get_message_for_error(self):
+        message = random.choice(self.data['message_for_error'])
+        return message
 
 
 class Response:
-    def __init__(self, latitude, longitude, url,
-                 message_for_address, message_for_story):
+    def __init__(self, status, latitude, longitude, url,
+                 message_for_address, message_for_story,
+                 message_for_error):
+        self.status = status
         self.latitude = latitude
         self.longitude = longitude
         self.url = url
         self.message_for_address = message_for_address
         self.message_for_story = message_for_story
+        self.message_for_error = message_for_error
 
     def formatted_response(self):
         return {
+            "status": self.status,
             "latitude": self.latitude,
             "longitude": self.longitude,
             "url": self.url,
             "message_for_address": self.message_for_address,
-            "message_for_story": self.message_for_story
+            "message_for_story": self.message_for_story,
+            "message_for_error": self.message_for_error
         }

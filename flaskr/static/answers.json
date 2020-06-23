@@ -9,5 +9,13 @@
     ],
     "message_for_story": [
         
+    ],
+
+    "message_for_error": [
+        "Je ne comprends pas ta question, peux-tu reformuler?",
+        "Je ne connais pas ce que tu me demandes",
+        "Désolé mais sans mes lunettes je ne vois pas ta question",
+        "Que veux-tu dire?",
+        "Malheureusement je n'ai pas de réponse"        
     ]
 }
