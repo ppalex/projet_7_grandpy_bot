@@ -2,6 +2,7 @@ import json
 import os
 
 from flaskr.models import GoogleApi, Message, Parser, Response, WikiApi
+from flaskr.views import index, form, render_template, jsonify
 
 
 class TestGoogleApi:
@@ -336,3 +337,41 @@ class TestMessage:
         data_message = Message.get_answers_from_json()
 
         assert data_message.get_message_for_error() == result
+
+
+# class TestViews:
+
+    # def test_index(self):
+    #     template = "<h1>Index</h1>"
+
+    def test_form(self, monkeypatch):
+
+        def mock_form():
+
+            response = {
+                "status": "status",
+                "latitude": 0,
+                "longitude": 0,
+                "url": "url",
+                "message_for_address": "message_for_address",
+                "message_for_story": "message_for_story",
+                "message_for_error": "message_for_error"
+            }
+
+            return jsonify(response)
+
+        response = {
+            "status": "status",
+            "latitude": 0,
+            "longitude": 0,
+            "url": "url",
+            "message_for_address": "message_for_address",
+            "message_for_story": "message_for_story",
+            "message_for_error": "message_for_error"
+        }
+
+        # monkeypatch.setattr("flaskr.views.form", mock_form)
+        form = mock_form()
+        result = form()
+
+        assert result == jsonify(response)

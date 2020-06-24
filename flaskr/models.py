@@ -1,15 +1,13 @@
-import logging
-import requests
-import re
 import json
+import logging
 import os
+import random
+import re
+
+import requests
 from nltk.stem import SnowballStemmer
 from nltk.tokenize import word_tokenize
-
-import random
-
 from unidecode import unidecode
-
 
 import configuration.config as config
 
@@ -18,11 +16,24 @@ config.load('./configuration/config.yml')
 
 class GoogleApi:
     def __init__(self):
+        """Constructor of the class GoogleApi
+        """
         self.url = config.value['GOOGLE']['URL']
         self.api_key = config.value['GOOGLE']['API_KEY']
         self._data = []
 
     def send_request(self, place):
+        """This method send a request on the google api end point.
+
+        Args:
+            place (String): 
+
+        Raises:
+            SystemExit: If exception is raised.
+
+        Returns:
+            [Response]: response from the request. Contains the data.
+        """
         payload = {'address': place, 'key': self.api_key}
         try:
             response = requests.get(self.url, params=payload)
@@ -41,6 +52,11 @@ class GoogleApi:
             return None
 
     def get_data(self):
+        """This method 
+
+        Returns:
+            [type]: [description]
+        """        
         return self._data
 
     def get_formatted_address(self):
@@ -98,6 +114,8 @@ class GoogleApi:
 
 class WikiApi:
     def __init__(self):
+        """Constructor of the class WikiApi
+        """
         self.url = config.value['MEDIA_WIKI']['URL']
         self._data = []
 
@@ -189,6 +207,8 @@ class WikiApi:
 
 class Parser:
     def __init__(self, message):
+        """Constructor of the class Parser
+        """
         self.message = message
 
     def set_lowercase(self):
@@ -296,6 +316,8 @@ class Parser:
 
 class Message:
     def __init__(self, data):
+        """Constructor of the class Message.
+        """
         self.data = data
 
     @classmethod
@@ -323,6 +345,8 @@ class Response:
     def __init__(self, status, latitude, longitude, url,
                  message_for_address, message_for_story,
                  message_for_error):
+        """Constructor of the class Response.
+        """
         self.status = status
         self.latitude = latitude
         self.longitude = longitude
