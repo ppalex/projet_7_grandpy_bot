@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GrandPy Bot</title>
-  <link href="../static/style.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
@@ -39,7 +39,7 @@
     </a>
     <!-- Github -->
     <a class="github-ic" href="https://github.com/ppalex">
-      <img src="../static/images/github.png" alt="https://github.com/ppalex" style="width:40px;">
+      <img src="../static/images/github.png"  alt="https://github.com/ppalex" style="width:40px;">
     </a>
   </div>
 
@@ -53,6 +53,6 @@
   integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-McM-pGC4QdJMueAwaUb6JufPAQvsC58"></script>
 
-<script type="module" src="../static/index.js"></script>
+<script type="module" src="{{ url_for('static', filename='index.js') }}"></script>
 
 </html>
