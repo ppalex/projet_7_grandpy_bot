@@ -16,8 +16,7 @@ config.load('./configuration/config.yml')
 
 class GoogleApi:
     def __init__(self):
-        """Constructor of the class GoogleApi
-        """
+        """Constructor of the class GoogleApi."""
         self.url = config.value['GOOGLE']['URL']
         self.api_key = config.value['GOOGLE']['API_KEY']
         self._data = []
@@ -125,8 +124,7 @@ class GoogleApi:
         return status
 
     def set_status(self, new_status):
-        """This method modifies the status of the data.
-        """
+        """This method modifies the status of the data."""
         try:
             if self.get_data():
                 self.get_data()['status'] = new_status
@@ -136,14 +134,13 @@ class GoogleApi:
 
 class WikiApi:
     def __init__(self):
-        """Constructor of the class WikiApi
-        """
+        """Constructor of the class WikiApi."""
         self.url = config.value['MEDIA_WIKI']['URL']
         self._data = []
 
     def send_geosearch_request(self, latitude, longitude):
-        """This method send a request on the wiki api end point.
-        The request is based on coordinates.
+        """This method send a request on the wiki api end point. The request is
+        based on coordinates.
 
         Args:
             latitude (Int): Latitude of the place.
@@ -180,8 +177,8 @@ class WikiApi:
             return None
 
     def send_pageids_request(self, pageids):
-        """This method send a request on the wiki api end point.
-        The request is based on the page_id of the wiki page.
+        """This method send a request on the wiki api end point. The request is
+        based on the page_id of the wiki page.
 
         Args:
             pageids (Int): id.
@@ -279,13 +276,11 @@ class WikiApi:
 
 class Parser:
     def __init__(self, message):
-        """Constructor of the class Parser
-        """
+        """Constructor of the class Parser."""
         self.message = message
 
     def set_lowercase(self):
-        """This method put the uppercase letter to lowercase into
-        a string.
+        """This method put the uppercase letter to lowercase into a string.
 
         Returns:
             [String]: Contains only lowercase letter.
@@ -294,8 +289,8 @@ class Parser:
         return self.message
 
     def remove_accents(self):
-        """This method remove letter with accentuation and replace it with
-        the letter without accent.
+        """This method remove letter with accentuation and replace it with the
+        letter without accent.
 
         Returns:
             [String]: Contains letters without accents.
@@ -327,8 +322,8 @@ class Parser:
         return self.message
 
     def remove_stop_words(self):
-        """This method removes stop words from a string.
-        The list of stopwords is located in 'static\fr.json'
+        """This method removes stop words from a string. The list of stopwords
+        is located in 'static\fr.json'.
 
         Returns:
             [String]: Contains a string without stopwords.
@@ -357,8 +352,8 @@ class Parser:
         return self.message
 
     def _pick_up_question(self, question_list):
-        """This method choose an appropriate question for the wiki_api from
-        a list a question.
+        """This method choose an appropriate question for the wiki_api from a
+        list a question.
 
         Args:
             question_list (List): Contains a list of question.
@@ -441,14 +436,13 @@ class Parser:
 
 class Message:
     def __init__(self, data):
-        """Constructor of the class Message.
-        """
+        """Constructor of the class Message."""
         self.data = data
 
     @classmethod
     def get_answers_from_json(cls):
-        """This class method create a message from the data contained
-        in the 'answer.json' file.
+        """This class method create a message from the data contained in the
+        'answer.json' file.
 
         Returns:
             [Message]: Object which contains a bunch of answers.
@@ -486,8 +480,7 @@ class Response:
     def __init__(self, status, latitude, longitude, url,
                  message_for_address, message_for_story,
                  message_for_error):
-        """Constructor of the class Response.
-        """
+        """Constructor of the class Response."""
         self.status = status
         self.latitude = latitude
         self.longitude = longitude
@@ -497,8 +490,8 @@ class Response:
         self.message_for_error = message_for_error
 
     def formatted_response(self):
-        """This method return the formatted response and all the data
-        that will be displayed for the user of the app.
+        """This method return the formatted response and all the data that will
+        be displayed for the user of the app.
 
         Returns:
             [Dict]: Contains status, latitude, longitude, url, and messages.

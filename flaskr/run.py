@@ -11,6 +11,11 @@ app.register_blueprint(view)
 app.secret_key = conf.value['SECRET_KEY']
 app.debug = conf.value['DEBUG']
 
-if __name__ == '__main__':
 
+def main():
     app.run()
+
+
+if __name__ == '__main__':
+    """Main method to launch the app."""
+    main()

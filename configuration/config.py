@@ -2,7 +2,6 @@
 
 The configuration is read from a YAML file and saved in a module-global
 variable.
-
 """
 import yaml
 
