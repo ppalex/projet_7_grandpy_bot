@@ -49,3 +49,7 @@ set FLASK_APP=flaskr\run.py
 ```
 Flask run
 ```
+
+## Contribution
+
+Icon made by Pixel perfect from www.flaticon.com.
