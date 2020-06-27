@@ -29,6 +29,7 @@ pip install -r requirements.txt
 * AJAX to send the question to the back-end.
 * Using of Google Maps and Media Wiki API to get the information and data to display.
 * The project has been developed by following a Test Driven Development methodology.
+* Using of Bootstrap to make the app responsive.
 
 
 ## Prerequisite
