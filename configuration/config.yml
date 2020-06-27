@@ -9,7 +9,7 @@ SECRET_KEY : '_5#y2L"F4Q8z\n\xec]/'
 
 GOOGLE:
   URL: "https://maps.googleapis.com/maps/api/geocode/json"
-  API_KEY: ""
+  API_KEY: "AIzaSyD0o1KJjIj7ytRYBmYAIx5iOvNJ7NvL-34"
   
 
 MEDIA_WIKI:
