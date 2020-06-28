@@ -62,8 +62,9 @@ def parse_data_from_user(data):
     parser = Parser(data)
     parser.set_lowercase()
     parser.remove_accents()
-    parser.remove_stop_words()
     parser.remove_apostrof()
+    parser.remove_hyphen()
+    parser.remove_stop_words()
     parser.extract_questions()
 
     return parser.message

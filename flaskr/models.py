@@ -351,6 +351,15 @@ class Parser:
         self.message = self.message.replace("'", " ")
         return self.message
 
+    def remove_hyphen(self):
+        """This method removes hyphens from a string.
+
+        Returns:
+            [String]: Contains a string without hyphens.
+        """
+        self.message = self.message.replace("-", " ")
+        return self.message
+
     def _pick_up_question(self, question_list):
         """This method choose an appropriate question for the wiki_api from a
         list a question.

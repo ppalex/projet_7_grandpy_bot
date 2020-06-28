@@ -45,11 +45,25 @@ Check this URL for more information: https://console.developers.google.com/
 set FLASK_APP=flaskr\run.py
 ```
 
+* To launch the app in debug mode:
+```
+set FLASK_ENV=development
+```
+
 * Then launch the following command:
 ```
 Flask run
 ```
 
-## Contribution
+
+## To create a test coverage report
+
+* Launch:
+
+```
+pytest --cov=flaskr --cov-report html
+```
+
+## Attribution
 
 Icon made by Pixel perfect from www.flaticon.com.

@@ -335,6 +335,14 @@ class TestParser:
 
         assert parser.remove_accents() == result
 
+    def test_remove_hypen(self):
+        """This method tests remove_accent method."""
+        result = "a b c d"
+        message = "a-b-c-d"
+        parser = Parser(message)
+
+        assert parser.remove_hyphen() == result
+
     def test_extract_questions(self):
         """This method test extract_questions method."""
         result = """Est-ce que tu pourrais m indiquer
