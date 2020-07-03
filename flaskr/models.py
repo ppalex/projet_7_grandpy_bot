@@ -11,6 +11,8 @@ from unidecode import unidecode
 
 import configuration.config as config
 
+from os import environ
+
 config.load('./configuration/config.yml')
 
 
@@ -18,7 +20,7 @@ class GoogleApi:
     def __init__(self):
         """Constructor of the class GoogleApi."""
         self.url = config.value['GOOGLE']['URL']
-        self.api_key = config.value['GOOGLE']['API_KEY']
+        self.api_key = environ.get('GOOGLE_API_KEY')
         self._data = []
 
     def send_request(self, place):
