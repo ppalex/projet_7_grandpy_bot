@@ -2,25 +2,18 @@
 
 {% block main %}
 
-<section>
-    <div class="chat" id="chatbox">
-    </div>
-</section>
 
 <section>
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
-                <div class="container">
-                    <form method="post" action="" id="form-question">
-                        <div class="div-question">
-                            <label for="question">Posez votre question:</label>
-                            <textarea class="form-control" rows="3" id="question" name="user_text" required></textarea>
-                        </div>
-                        <br>
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                    </form>
-                </div>
+                <section>
+                    <div class="chat" id="chatbox">
+                    </div>
+                    <div class="spinner-border text-primary" role="status" id="loader" style="display:none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </section>
             </div>
             <div class="col-lg-6">
                 <div class="container-fluid"></div>
@@ -28,9 +21,22 @@
                 </div>
             </div>
         </div>
-
     </div>
+    </div>
+    
+
+    <div class="container">
+        <form method="post" action="" id="form-question">
+            <div class="div-question">
+                <label for="question">Posez votre question:</label>
+                <textarea class="form-control" rows="3" id="question" name="user_text" required></textarea>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
     </div>
 </section>
+
+
 
 {% endblock %}

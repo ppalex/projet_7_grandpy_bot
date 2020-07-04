@@ -106,11 +106,10 @@ form.addEventListener('submit', function (event) {
     else {
 
         add_question_to_chat(question);
-
+        document.getElementById('loader').style.display = 'block';
         send_data_to_backend("/form", new FormData(form))
             .then(response => {
-
-
+                
                 let status = response["status"];
 
                 if (status == "OK") {
@@ -123,13 +122,16 @@ form.addEventListener('submit', function (event) {
                     add_answer_to_chat(message_for_address, null);
                     add_answer_to_chat(message_for_story, url);
                     displayMap(lat, lng);
+                    
                 }
                 else {
                     let message_for_error = response["message_for_error"];
                     add_answer_to_chat(message_for_error, null);
-                }            
+                }
+                document.getElementById('loader').style.display = 'None';            
 
             });
+            
     }
 });
 
