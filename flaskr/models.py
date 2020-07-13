@@ -45,7 +45,7 @@ class GoogleApi:
         except requests.exceptions.RequestException as e:
             logging.error("Bad request", exc_info=True)
             raise SystemExit(e)
-
+        
         if response.status_code == 200:
             self._data = response.json()
             return response.json()
