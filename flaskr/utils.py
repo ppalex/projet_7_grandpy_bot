@@ -21,9 +21,7 @@ def treat_data_from_user(data):
     if (google_api_data.get_status() == 'OK'):
         wiki_api_data, page_id = get_data_from_wiki_api(google_api_data)
         
-        check_page_id(google_api_data, page_id)
-
-        if (google_api_data.get_status() == 'OK'):
+        if (page_id is not None):
 
             extract_text_from_wiki = wiki_api_data.get_extract(page_id)
 
