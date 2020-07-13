@@ -93,6 +93,12 @@ function get_current_time() {
     return time;
 }
 
+function scroll_down() {
+
+    let chatbox = document.querySelector("#chatbox");
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
 
 form.addEventListener('submit', function (event) {
 
@@ -121,6 +127,8 @@ form.addEventListener('submit', function (event) {
                     console.log(response);
                     add_answer_to_chat(message_for_address, null);
                     add_answer_to_chat(message_for_story, url);
+                    scroll_down();
+
                     displayMap(lat, lng);
                     
                 }
